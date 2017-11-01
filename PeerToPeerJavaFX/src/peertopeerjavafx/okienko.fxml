@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="166.0" prefWidth="222.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="peertopeerjavafx.OkienkoController">
+    <stylesheets>
+        <URL value="@okienko.css" />
+    </stylesheets>
+   <children>
+      <GridPane fx:id="okienkoTop" layoutY="6.0" prefHeight="166.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="208.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="112.0" minWidth="10.0" prefWidth="27.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="142.0" minHeight="10.0" prefHeight="142.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="okienkoText" text="elooooo" />
+            <Button fx:id="okienkoButton" mnemonicParsing="false" text="O" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
