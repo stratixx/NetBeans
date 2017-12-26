@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -16,18 +17,14 @@ import javafx.stage.Stage;
  * @author Skrzatt
  */
 public class PeerToPeerJavaFX extends Application {
+    //public Stage primaryStage;
     
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("startView.fxml"));
-        
-        Scene scene = new Scene(root);
-        
-        stage.setScene(scene);
-        stage.show();
-        
-        //Parent talker = FXMLLoader.load(getClass().getResource("talkView.fxml"));        
-        //Scene talker_scene = new Scene(talker);
+        Scene scene = new Scene(root);        
+        primaryStage.setScene(scene);
+        primaryStage.show();        
         
     }
     

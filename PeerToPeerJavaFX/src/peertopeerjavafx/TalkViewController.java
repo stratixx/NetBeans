@@ -41,7 +41,7 @@ public class TalkViewController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        System.out.println("peertopeerjavafx.TalkViewController.initialize()");
     }    
 
     @FXML

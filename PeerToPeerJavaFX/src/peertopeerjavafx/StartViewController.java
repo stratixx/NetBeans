@@ -5,6 +5,7 @@
  */
 package peertopeerjavafx;
 
+import java.lang.String;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -46,17 +47,20 @@ public class StartViewController implements Initializable {
     @FXML
     private Label labelStatus;
     
-    void starterStart(WindowEvent event)
+    
+    
+    void windowStart( Socket socket, String newView, String closeView)
     {
         try
-        {
-            
+        {            
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("startView.fxml"));
+            fxmlLoader.setLocation(getClass().getResource( newView ));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
             //stage.setTitle("TalkView");
             stage.setScene(scene);
+            if( closeView!="" )                
+                stage.setOnCloseRequest(event -> { try{socket.close();} catch(Exception e){} windowStart( socket, closeView, "");});
             stage.show();
         }
         catch( Exception e )
@@ -65,26 +69,15 @@ public class StartViewController implements Initializable {
         }
         
     }
-     void talkerStart( Socket socket ) throws Exception
-    {
-            System.out.println("peertopeerjavafx.StartViewController.talkerStart()");
-
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("talkView.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-            Stage stage = new Stage();
-            //stage.setTitle("TalkView");
-            stage.setScene(scene);
-            stage.setOnCloseRequest(event -> { try{socket.close();} catch(Exception e){} starterStart(event);});
-            stage.show();
-    }
+    
+    
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        System.out.println("peertopeerjavafx.StartViewController.initialize()");
     }    
 
     @FXML
@@ -95,14 +88,13 @@ public class StartViewController implements Initializable {
             socket = new Socket( adressIP.getText(), Integer.parseInt(adressPort.getText()) );
             // hide current view and start talkView
             buttonTX.getScene().getWindow().hide();
-            talkerStart( socket );
+            windowStart(socket, "WaitWindowView.fxml", "");
             labelStatus.setText("Connecting to host... OK");
         }
         catch( Exception e )
         {
             labelStatus.setText("Connecting to host... FAILED");
-        }
-        
+        }      
         
     }
 
@@ -118,14 +110,14 @@ public class StartViewController implements Initializable {
             ServerSocket serverSocket;
             serverSocket = new ServerSocket( Integer.parseInt( adressPort.getText()) );
             adressIP.setText( serverSocket.getInetAddress().getHostName() );
-            
+            //waitWindowStart(new Socket());
             socket = serverSocket.accept();
             serverSocket.close();
             System.out.println("accept: peertopeerjavafx.StartViewController.onActionButtonRX()");
             
             buttonRX.getScene().getWindow().hide();
             
-            talkerStart( socket );
+            windowStart(socket, "WaitWindowView.fxml", "talkView.fxml");
             labelStatus.setText("Waiting for client... OK");
             System.out.println("done try: peertopeerjavafx.StartViewController.onActionButtonRX()");
         }
