@@ -6,34 +6,42 @@
 package peertopeerjavafx;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import peertopeerjavafx.Model.Model;
+import peertopeerjavafx.View.View;
+import peertopeerjavafx.Controller.Controller;
 
 /**
  *
  * @author Skrzatt
  */
-public class PeerToPeerJavaFX extends Application {
-    //public Stage primaryStage;
+public class PeerToPeerJavaFX extends Application{
+    
+    static Model model;
+    static View view;
+    static Controller controller;
+    
+    public static void main(String[] args) 
+    {
+        model = new Model();
+        view = new View();
+        controller = new Controller(view, model);
+        
+        model.setController(controller);
+        view.setController(controller);   
+        
+        launch(args);
+    }
     
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("startView.fxml"));
-        Scene scene = new Scene(root);        
-        primaryStage.setScene(scene);
-        primaryStage.show();        
-        
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-        System.out.println("END OF: peertopeerjavafx.PeerToPeerJavaFX.main()");
-    }
-    
+    public void start(Stage primaryStage) throws Exception { 
+        try
+        {
+            view.launch(primaryStage); 
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    } 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="71.0" prefWidth="235.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="107.0" layoutY="-25.0" prefHeight="87.0" prefWidth="235.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label id="infoLabel" fx:id="infoLabel" prefHeight="17.0" prefWidth="235.0" text="Nawiązywanie połączenia..." />
+            <Label id="statusLabel" fx:id="statusLabel" prefHeight="17.0" prefWidth="274.0" text="W trakcie..." />
+            <ProgressBar id="statusBar" fx:id="statusBar" prefHeight="18.0" prefWidth="236.0" />
+            <Button id="Button" fx:id="Button" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="36.0" prefWidth="235.0" text="Anuluj" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
