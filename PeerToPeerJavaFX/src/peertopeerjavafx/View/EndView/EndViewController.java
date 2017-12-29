@@ -6,13 +6,9 @@
 package peertopeerjavafx.View.EndView;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,7 +23,7 @@ import javafx.stage.WindowEvent;
  *
  * @author Skrzatt
  */
-public class EndViewController extends Stage{
+public class EndViewController extends Stage {
 
     @FXML
     private Button buttonOK;
@@ -37,39 +33,38 @@ public class EndViewController extends Stage{
 
     Parent content;
     
-    public EndViewController( Stage endViewStage, EndViewInterface callbacks ) throws IOException
+    public EndViewController( Stage endViewStage, EndViewCallbacks callbacks ) throws IOException
     {
         super();
         
         this.initModality(Modality.WINDOW_MODAL);
         this.initOwner(endViewStage.getScene().getWindow());
         content = FXMLLoader.load(getClass().getResource("endView_.fxml"));
+        
+        infoLabel = (Label)content.lookup("#infoLabel");
+        buttonOK = (Button)content.lookup("#ButtonOK");
+        
         this.setScene(new Scene(content));
         //this.show();
         
-        content.lookup("#ButtonOK").setOnMouseClicked(          
-            new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {                    
-                    callbacks.buttonOKClicked();
-                    event.consume();
-                };
-            }
-        );
+        buttonOK.setOnMouseClicked((MouseEvent event) -> {
+            callbacks.buttonOKClicked();
+            event.consume();
+        });
         
-        this.setOnCloseRequest(         
-            new EventHandler<WindowEvent>() 
-            {
-                @Override
-                public void handle(WindowEvent event) 
-                {                    
-                    callbacks.onClose(); 
-                    event.consume();
-                };
-            }
-        );
+        this.setOnCloseRequest((WindowEvent event) -> {
+            callbacks.onClose();
+            event.consume();
+        });
     }
     
+    public void setStatusDefault()
+    {        
+        infoLabel.setText("Zakończono rozmowę");
+    }
+    
+    public void setStatusEnd()
+    {        
+        infoLabel.setText("Połączenie zerwane");
+    }
 }

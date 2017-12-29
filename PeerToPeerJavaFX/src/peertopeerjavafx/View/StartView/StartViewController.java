@@ -40,7 +40,7 @@ public class StartViewController extends Stage{
     Parent content;
     
     
-    public StartViewController( StartViewInterface calbacks ) throws IOException
+    public StartViewController( StartViewCallbacks calbacks ) throws IOException
     {
         super();
         
@@ -54,33 +54,19 @@ public class StartViewController extends Stage{
         buttonRX = (Button)content.lookup("#buttonRX");
         labelStatus = (Label)content.lookup("#labelStatus");
         
-        buttonTX.setOnMouseClicked(          
-            new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {                    
-                    Connection connect = 
-                        new Connection(ConnectionType.CLIENT, adressIP.getText(), Integer.parseInt(adressPort.getText()));
-                    calbacks.buttonTXClicked(connect); 
-                    event.consume();
-                };
-            }
-        );
+        buttonTX.setOnMouseClicked((MouseEvent event) -> {
+            Connection connect =
+                    new Connection(ConnectionType.CLIENT, adressIP.getText(), Integer.parseInt(adressPort.getText()));
+            calbacks.buttonTXClicked(connect);
+            event.consume();
+        });
         
-        buttonRX.setOnMouseClicked(          
-            new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {                    
-                    Connection connect = 
-                        new Connection(ConnectionType.SERVER, adressIP.getText(), Integer.parseInt(adressPort.getText()));
-                    calbacks.buttonRXClicked(connect); 
-                    event.consume();
-                };
-            }
-        );
+        buttonRX.setOnMouseClicked((MouseEvent event) -> {
+            Connection connect =
+                    new Connection(ConnectionType.SERVER, adressIP.getText(), Integer.parseInt(adressPort.getText()));
+            calbacks.buttonRXClicked(connect);
+            event.consume();
+        });
     }
     
     

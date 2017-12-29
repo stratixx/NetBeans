@@ -44,7 +44,7 @@ public class TalkViewController extends Stage{
     
     Parent content;
     
-    public TalkViewController( TalkViewInterface callbacks ) throws IOException
+    public TalkViewController( TalkViewCallbacks callbacks ) throws IOException
     {
         super();
         
@@ -52,29 +52,15 @@ public class TalkViewController extends Stage{
         this.setScene(new Scene(content));
         //this.show();
         
-        content.lookup("#buttonSend").setOnMouseClicked(          
-            new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {                    
-                    callbacks.buttonSendClicked();
-                    event.consume();
-                };
-            }
-        );
+        content.lookup("#buttonSend").setOnMouseClicked((MouseEvent event) -> {
+            callbacks.buttonSendClicked();
+            event.consume();
+        });
         
-        this.setOnCloseRequest(         
-            new EventHandler<WindowEvent>() 
-            {
-                @Override
-                public void handle(WindowEvent event) 
-                {                    
-                    callbacks.onClose(); 
-                    event.consume();
-                };
-            }
-        );
+        this.setOnCloseRequest((WindowEvent event) -> {
+            callbacks.onClose();
+            event.consume();
+        });
     }
 
     

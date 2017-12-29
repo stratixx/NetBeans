@@ -11,14 +11,36 @@ package peertopeerjavafx.Tools;
  */
 public class ConnectionThread extends Thread{
     
-    public ConnectionThread()
+    private Connection connection;
+    
+    public ConnectionThread( Connection connection )
     {
+        this.connection = connection;
         
     }
+    
+    /**
+     * 
+     * @param connection 
+     */
+    public void setConnection( Connection connection )
+    {
+        this.connection = connection;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public Connection getConnection(  )
+    {
+        return this.connection;
+    }
+    
     
     @Override
     public void run()
     {
-        
+        System.out.println("peertopeerjavafx.Tools.ConnectionThread.run()");
     }
 }

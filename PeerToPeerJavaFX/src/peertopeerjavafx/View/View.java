@@ -3,13 +3,13 @@ package peertopeerjavafx.View;
 import peertopeerjavafx.View.WaitView.*;
 import peertopeerjavafx.View.TalkView.*;
 import peertopeerjavafx.View.EndView.*;
-import peertopeerjavafx.View.StartView.StartViewInterface;
 import peertopeerjavafx.View.StartView.StartViewController;
 import java.io.IOException;
 import javafx.stage.Stage;
 import peertopeerjavafx.Controller.ControllerViewInterface;
 import peertopeerjavafx.Controller.ViewInterface;
 import peertopeerjavafx.Tools.Connection;
+import peertopeerjavafx.View.StartView.StartViewCallbacks;
 
 
 
@@ -21,13 +21,6 @@ public class View implements ViewInterface
      */
     private ControllerViewInterface controller;
     
-    /**
-     * 
-     */
-    private StartViewInterface startViewCallbacks;
-    private WaitViewInterface waitViewCallbacks;
-    private TalkViewInterface talkViewCallbacks;
-    private EndViewInterface endViewCallbacks;
         
     private StartViewController startView;
     private WaitViewController waitView;
@@ -43,14 +36,15 @@ public class View implements ViewInterface
         
     }
     
-    
     /**
      * Inicjacja widoku
      * @param PrimaryStage
+     * @throws java.io.IOException
      */
     @Override
-    public void launch( Stage PrimaryStage ) throws IOException{        
-        startViewCallbacks = new StartViewInterface() {
+    public void launch( Stage PrimaryStage ) throws IOException{  
+        
+        StartViewCallbacks startViewCallbacks = new StartViewCallbacks() {
             @Override
             public void buttonTXClicked( Connection connect ) {
                 waitView.show();
@@ -64,10 +58,10 @@ public class View implements ViewInterface
             }
         };
         
-        waitViewCallbacks = new WaitViewInterface() {
+        WaitViewCallbacks waitViewCallbacks = new WaitViewCallbacks() {
             @Override
             public void buttonClicked() {
-                if( controller.isConnected() ) { waitView.hide(); startView.hide(); talkView.show(); }
+                if( controller.isConnectionOK() ) { talkView.show(); waitView.hide(); startView.hide(); }
                 else { waitView.hide(); controller.stopConnection(); }
             }
 
@@ -78,7 +72,7 @@ public class View implements ViewInterface
             }
         };
         
-        talkViewCallbacks = new TalkViewInterface() {
+        TalkViewCallbacks talkViewCallbacks = new TalkViewCallbacks() {
             @Override
             public void buttonSendClicked() {
                 System.out.println("rucham_psa_jak_sra.msg");
@@ -87,17 +81,22 @@ public class View implements ViewInterface
             @Override
             public void onClose() {
                 //talkView.hide();
+                endView.setStatusDefault();
                 endView.show();
                 controller.stopConnection();
             }
         };
                 
-        endViewCallbacks = new EndViewInterface() {
+        EndViewCallbacks endViewCallbacks = new EndViewCallbacks() {
             @Override
             public void buttonOKClicked() { talkView.hide(); endView.hide(); startView.show(); }
             
             @Override
-            public void onClose() { talkView.hide(); endView.hide(); startView.show(); }
+            public void onClose() 
+            { 
+                controller.stopConnection(); 
+                talkView.hide(); endView.hide(); startView.show(); 
+            }
         };
         
         startView = new StartViewController(startViewCallbacks);
@@ -108,6 +107,15 @@ public class View implements ViewInterface
         startView.show();
     }
     
+    /**
+     * 
+     */
+    @Override
+    public void showConnectionEnd()
+    {
+        endView.setStatusEnd();
+        waitView.setStatusEnd();
+    }
     
     /**
      * 
@@ -134,6 +142,7 @@ public class View implements ViewInterface
     public void showConnectionDefault()
     {
         waitView.setStatusDefault();
+        endView.setStatusDefault();
     }
 }
 

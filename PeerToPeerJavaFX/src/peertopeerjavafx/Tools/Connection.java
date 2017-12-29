@@ -7,16 +7,18 @@ package peertopeerjavafx.Tools;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Observable;
 
 /**
  *
  * @author Skrzatt
  */
-public class Connection {
+public class Connection extends Observable{
     
     
     private ConnectionType connectionType; // "SERVER" or "CLIENT"
     private ConnectionThread connectionThread;
+    private ServerSocket serverSocket;
     private Socket socket;
     private String adress;
     private int port;
@@ -29,6 +31,7 @@ public class Connection {
     {
         this.connectionType = connectionType;
         this.connectionThread = null;
+        this.serverSocket = null;
         this.socket = null;
         this.adress = adress;
         this.port = port;
@@ -36,12 +39,60 @@ public class Connection {
         this.fail = false;
     }
     
+    public void startClientConnection()
+    {
+        connectionThread = new ClientThread( this );
+        connectionThread.setName("ClientConnectionThread");
+        connectionThread.start();
+        
+        try
+        {
+            //socket = new Socket(adress, port);
+            //this.connected = true;
+            //this.fail = false;
+            //System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() OK");
+        }
+        catch( Exception e )
+        {
+            //e.printStackTrace();
+            this.connected = false;
+            this.fail = true;
+            System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() FAIL");
+        }
+        
+    }
+    
+    public void startServerConnection()
+    {
+        connectionThread = new ServerThread( this );
+        connectionThread.setName("ServerConnectionThread");
+        connectionThread.start();
+        
+        try
+        {
+            //serverSocket = new ServerSocket(port);
+            //socket = serverSocket.accept();
+            
+            //this.connected = true;
+            //this.fail = fail;
+            //System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() OK");
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+            this.connected = false;
+            this.fail = true;
+            System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() FAIL");
+        }       
+    }
+    
     public void close()
     {
         try
         {
+            this.deleteObservers();
             if( connectionThread!=null ) connectionThread.interrupt();
-            //if( serverSocket!=null ) serverSocket.close();
+            if( serverSocket!=null ) serverSocket.close();
             if( socket!=null ) socket.close();
         }
         catch( Exception e )
@@ -51,6 +102,13 @@ public class Connection {
         }
         
     }
+    
+    public void connected()
+    {
+        setChanged();
+        notifyObservers();        
+    }
+    
     
     public void setAdress( String newAdress )
     {
@@ -84,12 +142,12 @@ public class Connection {
     
     public void setConnected(Boolean newState)
     {
-        connected = newState;
+        this.connected = newState;
     }
     
     public Boolean isConnected()
     {        
-        return connected;
+        return this.connected;
     }
     
     public void setFail(Boolean newState)
@@ -99,6 +157,23 @@ public class Connection {
     
     public Boolean isFail()
     {
-        return fail;
+        return this.fail;
+    }
+    
+    public Boolean isConnectionDefault()
+    {        
+        return (!this.isConnected() && !this.isFail());
+    }
+    public Boolean isConnectionFail()
+    {
+        return (!this.isConnected() && this.isFail());
+    }
+    public Boolean isConnectionOK()
+    {
+        return (this.isConnected() && !this.isFail());
+    }
+    public Boolean isConnectionEnd()
+    {
+        return (this.isConnected() && this.isFail());
     }
 }

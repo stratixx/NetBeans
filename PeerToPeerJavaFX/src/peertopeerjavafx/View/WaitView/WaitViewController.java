@@ -6,7 +6,6 @@
 package peertopeerjavafx.View.WaitView;
 
 import java.io.IOException;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,7 +37,7 @@ public class WaitViewController extends Stage{
     
     Parent content;
     
-    public WaitViewController( Stage talkViewStage, WaitViewInterface callbacks ) throws IOException
+    public WaitViewController( Stage talkViewStage, WaitViewCallbacks callbacks ) throws IOException
     {
         super();
         
@@ -53,30 +52,16 @@ public class WaitViewController extends Stage{
         this.setScene(new Scene(content));
         
         
-        ButtonCancel.setOnMouseClicked(          
-            new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {                    
-                    callbacks.buttonClicked();
-                    event.consume();
-                };
-            }
-        );
+        ButtonCancel.setOnMouseClicked((MouseEvent event) -> {
+            callbacks.buttonClicked();
+            event.consume();
+        });
         
-        this.setOnCloseRequest(         
-            new EventHandler<WindowEvent>() 
-            {
-                @Override
-                public void handle(WindowEvent event) 
-                {                    
-                    callbacks.onClose(); 
-                    System.out.println(".handle() on exit");
-                    event.consume();
-                };
-            }
-        );
+        this.setOnCloseRequest((WindowEvent event) -> {
+            callbacks.onClose();
+            System.out.println(".handle() on exit");
+            event.consume();
+        });
     }
     
     @Override
@@ -86,22 +71,44 @@ public class WaitViewController extends Stage{
         super.hide();
     }
     
+    /**
+     * Połączenie zakończone przed rozpoczęciem rozmowy
+     */
+    public void setStatusEnd()
+    {
+        statusLabel.setText("połączenie zerwane!");
+        ButtonCancel.setText("Powrót");
+        statusBar.setProgress(0.66);
+    }
+    
+    /**
+     * Stan początkowy, nawiązywanie połączenia
+     */
     public void setStatusDefault()
     {
         statusLabel.setText("w trakcie...");
         ButtonCancel.setText("Anuluj");
+        statusBar.setProgress(-1.0);
     }
     
+    /**
+     * Połączenie nawiązane
+     */
     public void setStatusOK()
     {
         statusLabel.setText("zakończone sukcesem!");
         ButtonCancel.setText("Rozpocznij rozmowę");
+        statusBar.setProgress(1.0);
     }
     
+    /**
+     * Nie udało się nawiązać połączenia
+     */
     public void setStatusFAIL()
     {
         statusLabel.setText("zakończone niepowodzeniem!");
         ButtonCancel.setText("Powrót");
+        statusBar.setProgress(0.33);
     }
     
     

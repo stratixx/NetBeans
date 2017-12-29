@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package peertopeerjavafx.View.WaitView;
+package peertopeerjavafx.View.TalkView;
 
 /**
  *
  * @author Skrzatt
  */
-public interface WaitViewInterface {
-    public void buttonClicked();
+public interface TalkViewCallbacks {
+    public void buttonSendClicked();
     public void onClose();
 }

@@ -6,8 +6,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="293.0" prefWidth="454.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="71.0" prefWidth="214.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button id="ButtonOK" fx:id="ButtonOK" layoutX="201.0" layoutY="147.0" mnemonicParsing="false" text="OK" />
+      <Button id="ButtonOK" fx:id="ButtonOK" layoutX="59.0" layoutY="39.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="97.0" text="OK" />
+      <Label id="infoLabel" fx:id="infoLabel" layoutX="49.0" layoutY="14.0" text="Zakończono rozmowę" />
    </children>
 </AnchorPane>

@@ -1,6 +1,8 @@
 package peertopeerjavafx.Controller;
 
 
+import java.util.Observable;
+import java.util.Observer;
 import peertopeerjavafx.Model.*;
 import peertopeerjavafx.Tools.Connection;
 import peertopeerjavafx.View.*;
@@ -8,7 +10,8 @@ import peertopeerjavafx.View.*;
 
 
 public class Controller implements ControllerModelInterface,
-                                   ControllerViewInterface {
+                                   ControllerViewInterface,
+                                   Observer{
     /**
      * Referencja do obiektu Model 
      * @see Model
@@ -32,11 +35,56 @@ public class Controller implements ControllerModelInterface,
     }
     
     
+    @Override
+    public void update(Observable obs, Object obj)
+    {
+        Connection connect = (Connection)obs;
+        
+        // Sprawdzenie statusu połączenia
+        if( isConnectionEnd() )
+            view.showConnectionEnd(); // Połączenie zotało zerwane
+        else if( isConnectionFail() ) 
+            view.showConnectionFAIL(); // Nie udało się nawiązać połączenia
+        else if( isConnectionOK() ) 
+            view.showConnectionOK(); // Połączenie nawiązane
+        else if( isConnectionDefault() )
+            view.showConnectionDefault(); // Brak połączenia/nawiązywanie połączenia  
+        else
+            System.out.println("peertopeerjavafx.Controller.Controller.update() fatal error");
+    }
+    
+    
+    
+    @Override
+    public ViewInterface getView()
+    {
+        return view;
+    }
+    
+    
     //Metody interfesju ControllerViewInterface
     @Override
-    public Boolean isConnected()
+    public Boolean isConnectionDefault()
     {
-        return model.getConnection().isConnected();
+        return model.getConnection().isConnectionDefault();
+    }
+    
+    @Override
+    public Boolean isConnectionFail()
+    {
+        return model.getConnection().isConnectionFail();
+    }
+    
+    @Override
+    public Boolean isConnectionOK()
+    {
+        return model.getConnection().isConnectionOK();
+    }
+    
+    @Override
+    public Boolean isConnectionEnd()
+    {
+        return model.getConnection().isConnectionEnd();
     }
     
     /**
@@ -47,17 +95,16 @@ public class Controller implements ControllerModelInterface,
     public void startConnection( Connection connection )
     {
         model.setConnection(connection);
+        model.getConnection().addObserver(this);
         model.startConnection();
     }
     
     /**
-     * Zakończenie połączenia
-     * @param connection 
+     * Zakończenie połączenia 
      */
     @Override
     public void stopConnection(  )
-    {
-        //view.showEndView();
+    {        
         model.stopConnection();
     }
     
@@ -66,22 +113,22 @@ public class Controller implements ControllerModelInterface,
     
     /**
      * Połączenie nawiązane
-     */
+     *//*
     @Override
     public void connectionOK()
     {
         model.getConnection().setConnected(true);
         view.showConnectionOK();       
-    }
+    }*/
     
     /**
      * Próba połączenia nie powiodła się
-     */
+     *//*
     @Override
     public void connectionFAIL()
     {
         model.getConnection().setFail(true);
         view.showConnectionFAIL();
     }
-    
+    */
 }

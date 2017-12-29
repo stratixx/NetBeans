@@ -48,12 +48,12 @@ public class Model implements ModelInterface{
             case CLIENT:
                 System.out.println("START AS CLIENT");
                 System.out.printf("Adress: %s | port: %d", connection.getAdress(), connection.getPort());
-                controller.connectionOK();
+                connection.startClientConnection();
                 break;
             case SERVER:
                 System.out.println("START AS SERVER");
                 System.out.printf("port: %d", connection.getPort());
-                controller.connectionFAIL();
+                connection.startServerConnection();
                 break;
             default:
                     

@@ -20,6 +20,11 @@ public interface ViewInterface {
     /**
      * 
      */
+    public void showConnectionEnd();
+    
+    /**
+     * 
+     */
     public void showConnectionOK();
     
     /**

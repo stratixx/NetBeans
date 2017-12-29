@@ -10,10 +10,10 @@ public interface ControllerModelInterface {
     /**
      * 
      */
-    public void connectionOK();
+    //public void connectionOK();
     
     /**
      * 
      */
-    public void connectionFAIL();
+    //public void connectionFAIL();
 }

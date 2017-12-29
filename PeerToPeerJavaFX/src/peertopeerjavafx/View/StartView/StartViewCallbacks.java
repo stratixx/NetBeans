@@ -11,7 +11,7 @@ import peertopeerjavafx.Tools.Connection;
  *
  * @author Skrzatt
  */
-public interface StartViewInterface {
+public interface StartViewCallbacks {
     public void buttonTXClicked( Connection connect );
     public void buttonRXClicked( Connection connect );
 }

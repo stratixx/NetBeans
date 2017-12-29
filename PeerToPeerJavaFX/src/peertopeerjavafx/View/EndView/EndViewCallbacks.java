@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package peertopeerjavafx.View.TalkView;
+package peertopeerjavafx.View.EndView;
 
 /**
  *
  * @author Skrzatt
  */
-public interface TalkViewInterface {
-    public void buttonSendClicked();
+public interface EndViewCallbacks{
+    public void buttonOKClicked();
     public void onClose();
 }
