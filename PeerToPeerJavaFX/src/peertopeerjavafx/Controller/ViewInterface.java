@@ -2,7 +2,10 @@ package peertopeerjavafx.Controller;
 
 import java.io.IOException;
 import javafx.stage.Stage;
-import peertopeerjavafx.Tools.Connection;
+import peertopeerjavafx.View.EndView.EndViewController;
+import peertopeerjavafx.View.StartView.StartViewController;
+import peertopeerjavafx.View.TalkView.TalkViewController;
+import peertopeerjavafx.View.WaitView.WaitViewController;
 
 
 /**
@@ -14,26 +17,13 @@ public interface ViewInterface {
     
     /**
      * Inicjacja głównego widoku
+     * @param primaryStage
+     * @throws java.io.IOException
      */
     public void launch( Stage primaryStage ) throws IOException;
     
-    /**
-     * 
-     */
-    public void showConnectionEnd();
-    
-    /**
-     * 
-     */
-    public void showConnectionOK();
-    
-    /**
-     * 
-     */
-    public void showConnectionFAIL();
-    
-    /**
-     * 
-     */
-    public void showConnectionDefault();
+    public WaitViewController getWaitView();
+    public EndViewController getEndView();
+    public TalkViewController getTalkView();
+    public StartViewController getStartView();
 }

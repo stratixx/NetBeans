@@ -16,7 +16,7 @@ public class ConnectionThread extends Thread{
     public ConnectionThread( Connection connection )
     {
         this.connection = connection;
-        
+        //Thread.currentThread()
     }
     
     /**

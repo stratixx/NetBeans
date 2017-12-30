@@ -7,13 +7,24 @@ package peertopeerjavafx.Controller;
  */
 public interface ControllerModelInterface {
     
-    /**
-     * 
-     */
-    //public void connectionOK();
     
     /**
      * 
      */
-    //public void connectionFAIL();
+    public void showConnectionEnd();
+    
+    /**
+     * 
+     */
+    public void showConnectionOK();
+    
+    /**
+     * 
+     */
+    public void showConnectionFAIL();
+    
+    /**
+     * 
+     */
+    public void showConnectionDefault();
 }

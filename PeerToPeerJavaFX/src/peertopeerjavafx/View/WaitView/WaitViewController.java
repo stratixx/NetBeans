@@ -25,17 +25,22 @@ import javafx.stage.WindowEvent;
  */
 public class WaitViewController extends Stage{
 
-    @FXML
-    private Label infoLabel;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private ProgressBar statusBar;
+    //@FXML
+    //private Label infoLabel;
+    //@FXML
+    //private Label statusLabel;
+    //@FXML
+    //private ProgressBar statusBar;
     @FXML
     private Button ButtonCancel;
     
     
     Parent content;
+    
+    public Parent getContent()
+    {
+        return content;
+    }
     
     public WaitViewController( Stage talkViewStage, WaitViewCallbacks callbacks ) throws IOException
     {
@@ -45,9 +50,6 @@ public class WaitViewController extends Stage{
         this.initOwner(talkViewStage.getScene().getWindow());
         content = FXMLLoader.load(getClass().getResource("waitView_.fxml"));
         
-        infoLabel = (Label)content.lookup("#infoLabel");
-        statusLabel = (Label)content.lookup("#statusLabel");
-        statusBar = (ProgressBar)content.lookup("#statusBar");
         ButtonCancel = (Button)content.lookup("#Button");
         this.setScene(new Scene(content));
         
@@ -67,8 +69,20 @@ public class WaitViewController extends Stage{
     @Override
     public void hide()
     {
-        setStatusDefault();
         super.hide();
+        setStatusDefault();
+    }
+    
+    
+    public void showView()
+    {
+        setStatusDefault();
+        super.show();
+    }
+    
+    public void setElementVisible( String element, Boolean visible)
+    {
+        content.lookup(element).setVisible(visible);
     }
     
     /**
@@ -76,9 +90,13 @@ public class WaitViewController extends Stage{
      */
     public void setStatusEnd()
     {
-        statusLabel.setText("połączenie zerwane!");
+        setElementVisible("#statusLabelDefault", false);
+        setElementVisible("#statusLabelFail", false);
+        setElementVisible("#statusLabelOK", false);
+        setElementVisible("#statusLabelEnd", true);
+        //statusLabel.setText("połączenie zerwane!");
         ButtonCancel.setText("Powrót");
-        statusBar.setProgress(0.66);
+        //statusBar.setProgress(0.66);
     }
     
     /**
@@ -86,9 +104,13 @@ public class WaitViewController extends Stage{
      */
     public void setStatusDefault()
     {
-        statusLabel.setText("w trakcie...");
+        setElementVisible("#statusLabelDefault", true);
+        setElementVisible("#statusLabelFail", false);
+        setElementVisible("#statusLabelOK", false);
+        setElementVisible("#statusLabelEnd", false);
+        //statusLabel.setText("w trakcie...");
         ButtonCancel.setText("Anuluj");
-        statusBar.setProgress(-1.0);
+        //statusBar.setProgress(-1.0);
     }
     
     /**
@@ -96,9 +118,13 @@ public class WaitViewController extends Stage{
      */
     public void setStatusOK()
     {
-        statusLabel.setText("zakończone sukcesem!");
+        setElementVisible("#statusLabelDefault", false);
+        setElementVisible("#statusLabelFail", false);
+        setElementVisible("#statusLabelOK", true);
+        setElementVisible("#statusLabelEnd", false);
+        //statusLabel.setText("zakończone sukcesem!");
         ButtonCancel.setText("Rozpocznij rozmowę");
-        statusBar.setProgress(1.0);
+        //statusBar.setProgress(1.0);
     }
     
     /**
@@ -106,9 +132,13 @@ public class WaitViewController extends Stage{
      */
     public void setStatusFAIL()
     {
-        statusLabel.setText("zakończone niepowodzeniem!");
+        setElementVisible("#statusLabelDefault", false);
+        setElementVisible("#statusLabelFail", true);
+        setElementVisible("#statusLabelOK", false);
+        setElementVisible("#statusLabelEnd", false);
+        //statusLabel.setText("zakończone niepowodzeniem!");
         ButtonCancel.setText("Powrót");
-        statusBar.setProgress(0.33);
+        //statusBar.setProgress(0.33);
     }
     
     

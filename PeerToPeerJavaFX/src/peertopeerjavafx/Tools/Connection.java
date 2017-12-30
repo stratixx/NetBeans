@@ -8,6 +8,7 @@ package peertopeerjavafx.Tools;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
+import javafx.application.Platform;
 
 /**
  *
@@ -45,20 +46,6 @@ public class Connection extends Observable{
         connectionThread.setName("ClientConnectionThread");
         connectionThread.start();
         
-        try
-        {
-            //socket = new Socket(adress, port);
-            //this.connected = true;
-            //this.fail = false;
-            //System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() OK");
-        }
-        catch( Exception e )
-        {
-            //e.printStackTrace();
-            this.connected = false;
-            this.fail = true;
-            System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() FAIL");
-        }
         
     }
     
@@ -67,33 +54,18 @@ public class Connection extends Observable{
         connectionThread = new ServerThread( this );
         connectionThread.setName("ServerConnectionThread");
         connectionThread.start();
-        
-        try
-        {
-            //serverSocket = new ServerSocket(port);
-            //socket = serverSocket.accept();
-            
-            //this.connected = true;
-            //this.fail = fail;
-            //System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() OK");
-        }
-        catch( Exception e )
-        {
-            e.printStackTrace();
-            this.connected = false;
-            this.fail = true;
-            System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() FAIL");
-        }       
+             
     }
     
     public void close()
     {
         try
         {
-            this.deleteObservers();
-            if( connectionThread!=null ) connectionThread.interrupt();
+            //this.deleteObservers();
             if( serverSocket!=null ) serverSocket.close();
+            if( connectionThread!=null ) connectionThread.interrupt();
             if( socket!=null ) socket.close();
+            
         }
         catch( Exception e )
         {
@@ -101,14 +73,40 @@ public class Connection extends Observable{
             e.printStackTrace();
         }
         
+        connectionThread = null;
+        serverSocket = null;
+        socket = null;
+        //this.setChanged();
+        //this.notifyObservers();
     }
     
     public void connected()
-    {
-        setChanged();
-        notifyObservers();        
+    {// wywołanie zadania dla javafx
+        Platform.runLater(() -> {
+            setChanged();
+            notifyObservers();             
+        });       
     }
     
+    public void setServerSocket( ServerSocket newServerSocket )
+    {
+        this.serverSocket = newServerSocket;
+    }
+    
+    public ServerSocket getServerSocket()
+    {
+        return this.serverSocket;
+    }
+    
+    public void setSocket( Socket newSocket )
+    {
+        this.socket = newSocket;
+    }
+    
+    public Socket getSocket()
+    {
+        return this.socket;
+    }
     
     public void setAdress( String newAdress )
     {

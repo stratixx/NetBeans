@@ -6,7 +6,6 @@
 package peertopeerjavafx.View.EndView;
 
 import java.io.IOException;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,8 +26,6 @@ public class EndViewController extends Stage {
 
     @FXML
     private Button buttonOK;
-    @FXML
-    private Label infoLabel;
    
 
     Parent content;
@@ -41,7 +38,6 @@ public class EndViewController extends Stage {
         this.initOwner(endViewStage.getScene().getWindow());
         content = FXMLLoader.load(getClass().getResource("endView_.fxml"));
         
-        infoLabel = (Label)content.lookup("#infoLabel");
         buttonOK = (Button)content.lookup("#ButtonOK");
         
         this.setScene(new Scene(content));
@@ -58,13 +54,37 @@ public class EndViewController extends Stage {
         });
     }
     
+    
+    @Override
+    public void hide()
+    {
+        super.hide();
+        setStatusDefault();
+    }
+    
+    
+    public void showView()
+    {
+        setStatusDefault();
+        super.show();
+    }
+    
+    public void setElementVisible( String element, Boolean visible)
+    {
+        content.lookup(element).setVisible(visible);
+    }
+    
     public void setStatusDefault()
-    {        
-        infoLabel.setText("Zakończono rozmowę");
+    {      
+        setElementVisible("#infoLabelOK", true);
+        setElementVisible("#infoLabelEnd", false);
+        //infoLabel.setText("Zakończono rozmowę");
     }
     
     public void setStatusEnd()
     {        
-        infoLabel.setText("Połączenie zerwane");
+        setElementVisible("#infoLabelOK", false);
+        setElementVisible("#infoLabelEnd", true);
+        //infoLabel.setText("Połączenie zerwane");
     }
 }

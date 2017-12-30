@@ -47,13 +47,13 @@ public class View implements ViewInterface
         StartViewCallbacks startViewCallbacks = new StartViewCallbacks() {
             @Override
             public void buttonTXClicked( Connection connect ) {
-                waitView.show();
+                waitView.showView();
                 controller.startConnection(connect);
             }
 
             @Override
             public void buttonRXClicked( Connection connect ) {
-                waitView.show();
+                waitView.showView();
                 controller.startConnection(connect);
             }
         };
@@ -62,13 +62,13 @@ public class View implements ViewInterface
             @Override
             public void buttonClicked() {
                 if( controller.isConnectionOK() ) { talkView.show(); waitView.hide(); startView.hide(); }
-                else { waitView.hide(); controller.stopConnection(); }
+                else { controller.stopConnection(); waitView.hide(); }
             }
 
             @Override
             public void onClose() {
-                waitView.hide();
                 controller.stopConnection();
+                waitView.hide();
             }
         };
         
@@ -81,9 +81,9 @@ public class View implements ViewInterface
             @Override
             public void onClose() {
                 //talkView.hide();
-                endView.setStatusDefault();
-                endView.show();
                 controller.stopConnection();
+                //endView.setStatusDefault();
+                endView.show();
             }
         };
                 
@@ -108,41 +108,44 @@ public class View implements ViewInterface
     }
     
     /**
-     * 
+     *
+     * @return
      */
     @Override
-    public void showConnectionEnd()
+    public WaitViewController getWaitView()
     {
-        endView.setStatusEnd();
-        waitView.setStatusEnd();
+        return waitView;
     }
     
     /**
-     * 
+     *
+     * @return
      */
     @Override
-    public void showConnectionOK()
+    public EndViewController getEndView()
     {
-        waitView.setStatusOK();
+        return endView;
     }
     
     /**
-     * 
+     *
+     * @return
      */
     @Override
-    public void showConnectionFAIL()
+    public TalkViewController getTalkView()
     {
-        waitView.setStatusFAIL();
+        return talkView;
     }
     
     /**
-     * 
+     *
+     * @return
      */
     @Override
-    public void showConnectionDefault()
+    public StartViewController getStartView()
     {
-        waitView.setStatusDefault();
-        endView.setStatusDefault();
+        return startView;
     }
+    
 }
 

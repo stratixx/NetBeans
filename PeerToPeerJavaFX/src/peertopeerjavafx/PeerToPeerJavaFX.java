@@ -21,6 +21,7 @@ public class PeerToPeerJavaFX extends Application{
     static View view;
     static Controller controller;
     
+    
     public static void main(String[] args) 
     {
         model = new Model();

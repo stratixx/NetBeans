@@ -5,6 +5,8 @@
  */
 package peertopeerjavafx.Tools;
 
+import java.net.Socket;
+
 /**
  *
  * @author Skrzatt
@@ -22,8 +24,21 @@ public class ClientThread extends ConnectionThread {
         
         Connection tmp = super.getConnection();
         
-        tmp.setConnected(true);
-        tmp.setFail(false);
+        try
+        {            
+            tmp.setSocket( new Socket(tmp.getAdress(), tmp.getPort()) );
+            tmp.setConnected(true);
+            tmp.setFail(false);
+            System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() OK");
+        }
+        catch( Exception e )
+        {
+            //e.printStackTrace();
+            tmp.setConnected(false);
+            tmp.setFail(true);
+            System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() FAIL");
+        }
+        
         tmp.connected();
     }
     

@@ -1,8 +1,6 @@
 package peertopeerjavafx.Controller;
 
 
-import java.util.Observable;
-import java.util.Observer;
 import peertopeerjavafx.Model.*;
 import peertopeerjavafx.Tools.Connection;
 import peertopeerjavafx.View.*;
@@ -10,8 +8,8 @@ import peertopeerjavafx.View.*;
 
 
 public class Controller implements ControllerModelInterface,
-                                   ControllerViewInterface,
-                                   Observer{
+                                   ControllerViewInterface                                   
+                                   {
     /**
      * Referencja do obiektu Model 
      * @see Model
@@ -31,27 +29,10 @@ public class Controller implements ControllerModelInterface,
      */
     public Controller(View view, Model model){
         this.view = view;
-        this.model = model;
+        this.model = model;        
     }
     
     
-    @Override
-    public void update(Observable obs, Object obj)
-    {
-        Connection connect = (Connection)obs;
-        
-        // Sprawdzenie statusu połączenia
-        if( isConnectionEnd() )
-            view.showConnectionEnd(); // Połączenie zotało zerwane
-        else if( isConnectionFail() ) 
-            view.showConnectionFAIL(); // Nie udało się nawiązać połączenia
-        else if( isConnectionOK() ) 
-            view.showConnectionOK(); // Połączenie nawiązane
-        else if( isConnectionDefault() )
-            view.showConnectionDefault(); // Brak połączenia/nawiązywanie połączenia  
-        else
-            System.out.println("peertopeerjavafx.Controller.Controller.update() fatal error");
-    }
     
     
     
@@ -95,7 +76,7 @@ public class Controller implements ControllerModelInterface,
     public void startConnection( Connection connection )
     {
         model.setConnection(connection);
-        model.getConnection().addObserver(this);
+        //model.getConnection().addObserver(this);
         model.startConnection();
     }
     
@@ -110,25 +91,41 @@ public class Controller implements ControllerModelInterface,
     
     //Metody interfejsu ControllerModelInterface
     
-    
     /**
-     * Połączenie nawiązane
-     *//*
+     * 
+     */
     @Override
-    public void connectionOK()
+    public void showConnectionEnd()
     {
-        model.getConnection().setConnected(true);
-        view.showConnectionOK();       
-    }*/
-    
-    /**
-     * Próba połączenia nie powiodła się
-     *//*
-    @Override
-    public void connectionFAIL()
-    {
-        model.getConnection().setFail(true);
-        view.showConnectionFAIL();
+        view.getEndView().setStatusEnd();
+        view.getWaitView().setStatusEnd();
     }
-    */
+    
+    /**
+     * 
+     */
+    @Override
+    public void showConnectionOK()
+    {
+        view.getWaitView().setStatusOK();
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void showConnectionFAIL()
+    {
+        view.getWaitView().setStatusFAIL();
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void showConnectionDefault()
+    {
+        view.getWaitView().setStatusDefault();
+        view.getEndView().setStatusDefault();
+    }
 }
