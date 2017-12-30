@@ -89,6 +89,12 @@ public class Controller implements ControllerModelInterface,
         model.stopConnection();
     }
     
+    
+    @Override
+    public void sendText( String inputText )
+    {
+        model.getConnection().getOutput().println(inputText);
+    }
     //Metody interfejsu ControllerModelInterface
     
     /**

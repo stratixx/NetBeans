@@ -16,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -50,9 +52,17 @@ public class TalkViewController extends Stage{
         
         content = FXMLLoader.load(getClass().getResource("talkView.fxml"));
         this.setScene(new Scene(content));
+        
+        labelStatus = (Label)content.lookup("#labelStatus");
+        buttonSend = (Button)content.lookup("#buttonSend");
+        textOutput = (TextFlow)content.lookup("#textOutput");
+        textInput = (TextArea)content.lookup("#textInput");
+        scroller = (ScrollBar)content.lookup("#scroller");
         //this.show();
         
-        content.lookup("#buttonSend").setOnMouseClicked((MouseEvent event) -> {
+        textOutput.setTextAlignment(TextAlignment.LEFT);
+        
+        buttonSend.setOnMouseClicked((MouseEvent event) -> {
             callbacks.buttonSendClicked();
             event.consume();
         });
@@ -63,6 +73,16 @@ public class TalkViewController extends Stage{
         });
     }
 
-    
+    public String getInputText()
+    {
+        String text = textInput.getText();
+        if(!text.equals(""))
+        {
+            textOutput.getChildren().add(new Text(text+"\n"));
+        }
+        textOutput.requestLayout();
+        textInput.setText("");
+        return text;
+    }
     
 }

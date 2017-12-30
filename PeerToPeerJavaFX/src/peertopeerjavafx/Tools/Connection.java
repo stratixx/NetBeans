@@ -5,6 +5,9 @@
  */
 package peertopeerjavafx.Tools;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
@@ -23,8 +26,8 @@ public class Connection extends Observable{
     private Socket socket;
     private String adress;
     private int port;
-    //private inputbuffer
-    //private outputbuffer
+    private PrintWriter output;
+    private BufferedReader input;
     private Boolean connected;
     private Boolean fail;
     
@@ -63,8 +66,11 @@ public class Connection extends Observable{
         {
             //this.deleteObservers();
             if( serverSocket!=null ) serverSocket.close();
+            if( input!=null ) input.close();
+            if( output!=null ) output.close();
             if( connectionThread!=null ) connectionThread.interrupt();
             if( socket!=null ) socket.close();
+            
             
         }
         catch( Exception e )
@@ -74,14 +80,20 @@ public class Connection extends Observable{
         }
         
         connectionThread = null;
+        input = null;
+        output = null;
         serverSocket = null;
         socket = null;
         //this.setChanged();
         //this.notifyObservers();
     }
     
+    /**
+     *  Wątek nawiązujący połączenie zakończył pracę
+     */
     public void connected()
-    {// wywołanie zadania dla javafx
+    {        
+        // wywołanie zadania dla javafx, obserwatorem jest model
         Platform.runLater(() -> {
             setChanged();
             notifyObservers();             
@@ -126,6 +138,28 @@ public class Connection extends Observable{
     public int getPort()
     {
         return port;
+    }
+    
+    
+    public void setInput( BufferedReader newInput )
+    {
+        this.input = newInput;
+    }
+    
+    public BufferedReader getInput()
+    {
+        return this.input;
+    }
+    
+    
+    public void setOutput( PrintWriter newOutput )
+    {
+        this.output = newOutput;
+    }
+    
+    public PrintWriter getOutput()
+    {
+        return this.output;
     }
     
     public void setConnectionType( ConnectionType newType )

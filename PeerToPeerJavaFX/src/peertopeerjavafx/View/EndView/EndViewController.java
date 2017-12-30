@@ -26,7 +26,9 @@ public class EndViewController extends Stage {
 
     @FXML
     private Button buttonOK;
-   
+    
+    @FXML
+    private Label infoLabel;
 
     Parent content;
     
@@ -39,6 +41,7 @@ public class EndViewController extends Stage {
         content = FXMLLoader.load(getClass().getResource("endView_.fxml"));
         
         buttonOK = (Button)content.lookup("#ButtonOK");
+        infoLabel = (Label)content.lookup("#infoLabelOK");
         
         this.setScene(new Scene(content));
         //this.show();
@@ -53,6 +56,7 @@ public class EndViewController extends Stage {
             event.consume();
         });
     }
+    
     
     
     @Override
@@ -76,15 +80,15 @@ public class EndViewController extends Stage {
     
     public void setStatusDefault()
     {      
-        setElementVisible("#infoLabelOK", true);
-        setElementVisible("#infoLabelEnd", false);
-        //infoLabel.setText("Zakończono rozmowę");
+        //setElementVisible("#infoLabelOK", true);
+        //setElementVisible("#infoLabelEnd", false);
+        infoLabel.setText("Zakończono rozmowę");
     }
     
     public void setStatusEnd()
     {        
-        setElementVisible("#infoLabelOK", false);
-        setElementVisible("#infoLabelEnd", true);
-        //infoLabel.setText("Połączenie zerwane");
+        //setElementVisible("#infoLabelOK", false);
+        //setElementVisible("#infoLabelEnd", true);
+        infoLabel.setText("Połączenie zerwane");
     }
 }

@@ -75,7 +75,9 @@ public class View implements ViewInterface
         TalkViewCallbacks talkViewCallbacks = new TalkViewCallbacks() {
             @Override
             public void buttonSendClicked() {
-                System.out.println("rucham_psa_jak_sra.msg");
+                String text = talkView.getInputText();
+                if( !text.equals(""))
+                    controller.sendText( text );
             }
 
             @Override

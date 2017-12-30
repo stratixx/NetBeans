@@ -16,5 +16,7 @@ public interface ControllerViewInterface {
     public Boolean isConnectionEnd();
     public void startConnection( Connection connection );
     public void stopConnection(  );
+    public void sendText( String inputText );
+    
     public ViewInterface getView();
 }

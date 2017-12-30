@@ -5,7 +5,11 @@
  */
 package peertopeerjavafx.Tools;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  *
@@ -23,13 +27,22 @@ public class ServerThread extends ConnectionThread{
         System.out.println("peertopeerjavafx.Tools.ServerThread.run()");
         
         Connection tmp = super.getConnection();
+        ServerSocket serverSocket;
+        Socket socket;
         
         try
         {
-            tmp.setServerSocket( new ServerSocket(tmp.getPort()) );
-            tmp.setSocket( tmp.getServerSocket().accept() );
-            tmp.getServerSocket().close();
+            serverSocket = new ServerSocket(tmp.getPort());
+            socket = serverSocket.accept();
+            serverSocket.close();
+                        
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(socket.getInputStream()));
             
+            tmp.setOutput( out );
+            tmp.setInput( in );
+            tmp.setSocket( socket );
             tmp.setConnected(true);
             tmp.setFail(false);
             System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() OK");
