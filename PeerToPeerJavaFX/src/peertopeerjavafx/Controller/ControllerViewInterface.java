@@ -10,6 +10,7 @@ public interface ControllerViewInterface {
     
     //deklaracje funkcji change something
     
+    public void showConnectionEnd();
     public Boolean isConnectionDefault();
     public Boolean isConnectionFail();
     public Boolean isConnectionOK();

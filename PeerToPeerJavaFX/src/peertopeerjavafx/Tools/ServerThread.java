@@ -41,10 +41,11 @@ public class ServerThread extends ConnectionThread{
                 new InputStreamReader(socket.getInputStream()));
             
             tmp.setOutput( out );
-            tmp.setInput( in );
+            tmp.setExternalInput( in );
             tmp.setSocket( socket );
             tmp.setConnected(true);
             tmp.setFail(false);
+            tmp.startTalkerThread();
             System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() OK");
         }
         catch( Exception e )
@@ -55,6 +56,6 @@ public class ServerThread extends ConnectionThread{
             System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() FAIL");
         }  
         
-        tmp.connected();
+        tmp.informObservers();
     }
 }

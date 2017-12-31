@@ -1,5 +1,7 @@
 package peertopeerjavafx.Model;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import peertopeerjavafx.Controller.ControllerModelInterface;
@@ -26,20 +28,40 @@ public class Model implements ModelInterface, Observer {
     @Override
     public void update(Observable obs, Object obj)
     {
-        //Connection connect = (Connection)obs;
-        
+        System.out.println("peertopeerjavafx.Model.Model.update() start");
+        Connection connect = (Connection)obs;
+        System.out.print("peertopeerjavafx.Model.Model.update() ");
+        System.out.print("conn="+connect.isConnected()+" ");
+        System.out.println("fail="+connect.isFail());
         // Sprawdzenie statusu połączenia
-        if( connection.isConnectionEnd() )
+        if( connect.isConnectionEnd() )
             controller.showConnectionEnd(); // Połączenie zotało zerwane
-        else if( connection.isConnectionFail() ) 
+        else if( connect.isConnectionFail() ) 
             controller.showConnectionFAIL(); // Nie udało się nawiązać połączenia
-        else if( connection.isConnectionOK() ) 
+        else if( connect.isConnectionOK() ) 
             controller.showConnectionOK(); // Połączenie nawiązane
-        else if( connection.isConnectionDefault() )
+        else if( connect.isConnectionDefault() )
             controller.showConnectionDefault(); // Brak połączenia/nawiązywanie połączenia  
         else
             System.out.println("peertopeerjavafx.Model.Model.update()");
         
+        // sprawdzenie czy są dane do wyświetlenia
+        if(connect.isConnectionOK() && (connect.getInternalInput()!=null) ) 
+        {
+            List list = connect.getInternalInput();
+            Iterator<String> iter = list.iterator();
+            String text;
+            
+            while(iter.hasNext())
+            {
+                text = iter.next();
+                System.out.println( text );                
+                iter.remove();
+                
+                controller.showText(text);
+            }
+           // connection.getInternalInput().listIterator().
+        }
     }
     
     /**

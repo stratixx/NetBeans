@@ -37,10 +37,11 @@ public class ClientThread extends ConnectionThread {
                 new InputStreamReader(socket.getInputStream()));
             
             tmp.setOutput( out );
-            tmp.setInput( in );
+            tmp.setExternalInput( in );
             tmp.setSocket( socket );
             tmp.setConnected(true);
             tmp.setFail(false);
+            tmp.startTalkerThread();
             System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() OK");
         }
         catch( Exception e )
@@ -51,7 +52,7 @@ public class ClientThread extends ConnectionThread {
             System.out.println("peertopeerjavafx.Tools.Connection.startClientConnection() FAIL");
         }
         
-        tmp.connected();
+        tmp.informObservers();
     }
     
 }

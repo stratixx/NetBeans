@@ -103,8 +103,11 @@ public class Controller implements ControllerModelInterface,
     @Override
     public void showConnectionEnd()
     {
+        System.out.println("peertopeerjavafx.Controller.Controller.showConnectionEnd()");
         view.getEndView().setStatusEnd();
         view.getWaitView().setStatusEnd();
+        if( view.getTalkView().isShowing() )
+            view.getEndView().show();
     }
     
     /**
@@ -133,5 +136,16 @@ public class Controller implements ControllerModelInterface,
     {
         view.getWaitView().setStatusDefault();
         view.getEndView().setStatusDefault();
+    }
+    
+    @Override
+    public void showText( String text )
+    {
+        view.getTalkView().setOutputText(text);
+    }
+    
+    public void clearOutput()
+    {
+        view.getTalkView().clearOutputText();
     }
 }

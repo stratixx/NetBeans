@@ -27,4 +27,8 @@ public interface ControllerModelInterface {
      * 
      */
     public void showConnectionDefault();
+    
+    public void showText( String text );
+    
+    public void clearOutput();
 }

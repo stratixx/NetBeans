@@ -60,7 +60,7 @@ public class TalkViewController extends Stage{
         scroller = (ScrollBar)content.lookup("#scroller");
         //this.show();
         
-        textOutput.setTextAlignment(TextAlignment.LEFT);
+        //textOutput.setTextAlignment(TextAlignment.LEFT);
         
         buttonSend.setOnMouseClicked((MouseEvent event) -> {
             callbacks.buttonSendClicked();
@@ -72,17 +72,41 @@ public class TalkViewController extends Stage{
             event.consume();
         });
     }
-
+    
+    @Override
+    public void hide()
+    {
+        clearOutputText();
+        super.hide();
+    }
+    
     public String getInputText()
     {
-        String text = textInput.getText();
-        if(!text.equals(""))
+        String inputText = textInput.getText();
+        if(!inputText.equals(""))
         {
-            textOutput.getChildren().add(new Text(text+"\n"));
+            Text text = new Text("You: "+inputText+"\n");
+            text.setTextAlignment(TextAlignment.RIGHT);
+            textOutput.getChildren().add(text);
         }
         textOutput.requestLayout();
         textInput.setText("");
-        return text;
+        return inputText;
     }
     
+    public void setOutputText( String outputText )
+    {
+        if(!outputText.equals(""))
+        {
+            Text text = new Text("John: "+outputText+"\n");
+            text.setTextAlignment(TextAlignment.LEFT);
+            textOutput.getChildren().add(text);
+        }
+        textOutput.requestLayout();        
+    }
+    
+    public void clearOutputText()
+    {
+        textOutput.getChildren().clear();
+    }
 }

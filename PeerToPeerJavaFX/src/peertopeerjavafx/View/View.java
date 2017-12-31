@@ -75,9 +75,14 @@ public class View implements ViewInterface
         TalkViewCallbacks talkViewCallbacks = new TalkViewCallbacks() {
             @Override
             public void buttonSendClicked() {
-                String text = talkView.getInputText();
-                if( !text.equals(""))
-                    controller.sendText( text );
+                if( controller.isConnectionOK() )
+                {
+                    String text = talkView.getInputText();
+                    if( !text.equals(""))
+                        controller.sendText( text );
+                }
+                else
+                    controller.showConnectionEnd();
             }
 
             @Override
@@ -95,8 +100,8 @@ public class View implements ViewInterface
             
             @Override
             public void onClose() 
-            { 
-                controller.stopConnection(); 
+            {                 
+                //controller.stopConnection(); 
                 talkView.hide(); endView.hide(); startView.show(); 
             }
         };

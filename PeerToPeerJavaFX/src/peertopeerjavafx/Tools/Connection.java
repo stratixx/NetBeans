@@ -8,8 +8,10 @@ package peertopeerjavafx.Tools;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Observable;
 import javafx.application.Platform;
 
@@ -27,7 +29,8 @@ public class Connection extends Observable{
     private String adress;
     private int port;
     private PrintWriter output;
-    private BufferedReader input;
+    private BufferedReader externalInput;
+    private List internalInput;
     private Boolean connected;
     private Boolean fail;
     
@@ -39,6 +42,9 @@ public class Connection extends Observable{
         this.socket = null;
         this.adress = adress;
         this.port = port;
+        this.output = null;
+        this.externalInput = null;
+        this.internalInput = null;
         this.connected = false;
         this.fail = false;
     }
@@ -60,16 +66,37 @@ public class Connection extends Observable{
              
     }
     
-    public void close()
+    public void startTalkerThread()
     {
+        Connection conn = this;
+        
+        Thread thread = new Thread(() -> {
+            System.out.println("peertopeerjavafx.Tools.Connection.startTalkerThread() new thread");
+            while( (connectionThread!=null)&&(connectionThread.isAlive()) );
+            connectionThread = new TalkerThread( conn );
+            connectionThread.setName("TalkerThread");
+            connectionThread.start();
+        });
+        thread.setName("StarterForTalkerThread");
+        thread.start();
+    }
+    
+    /**
+     *
+     */
+    synchronized public void close()
+    {
+        System.out.println("peertopeerjavafx.Tools.Connection.close()");
+        //setConnected(false);
         try
         {
             //this.deleteObservers();
             if( serverSocket!=null ) serverSocket.close();
-            if( input!=null ) input.close();
+            if( socket!=null ) socket.close();
+            if( externalInput!=null ) externalInput.close();
+            //if( internalInput!=null ) internalInput.;
             if( output!=null ) output.close();
             if( connectionThread!=null ) connectionThread.interrupt();
-            if( socket!=null ) socket.close();
             
             
         }
@@ -80,12 +107,22 @@ public class Connection extends Observable{
         }
         
         connectionThread = null;
-        input = null;
+        externalInput = null;
+        internalInput = null;
         output = null;
         serverSocket = null;
         socket = null;
-        //this.setChanged();
-        //this.notifyObservers();
+        //setConnected(false);
+        informObservers();
+    }
+    
+    synchronized public void informObservers()
+    {
+        Platform.runLater(() -> {
+            setChanged();
+            notifyObservers();             
+        }); 
+        
     }
     
     /**
@@ -93,11 +130,9 @@ public class Connection extends Observable{
      */
     public void connected()
     {        
+        this.startTalkerThread();
         // wywołanie zadania dla javafx, obserwatorem jest model
-        Platform.runLater(() -> {
-            setChanged();
-            notifyObservers();             
-        });       
+        informObservers();
     }
     
     public void setServerSocket( ServerSocket newServerSocket )
@@ -141,14 +176,25 @@ public class Connection extends Observable{
     }
     
     
-    public void setInput( BufferedReader newInput )
+    public void setInternalInput( List newInput )
     {
-        this.input = newInput;
+        this.internalInput = newInput;
     }
     
-    public BufferedReader getInput()
+    public List getInternalInput()
     {
-        return this.input;
+        return this.internalInput;
+    }
+    
+    
+    public void setExternalInput( BufferedReader newInput )
+    {
+        this.externalInput = newInput;
+    }
+    
+    public BufferedReader getExternalInput()
+    {
+        return this.externalInput;
     }
     
     

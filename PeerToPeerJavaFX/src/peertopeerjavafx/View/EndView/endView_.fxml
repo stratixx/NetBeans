@@ -6,10 +6,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="71.0" prefWidth="214.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" prefHeight="100.0" prefWidth="275.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button id="ButtonOK" fx:id="ButtonOK" layoutX="59.0" layoutY="39.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="97.0" text="OK" />
-      <Label id="infoLabelOK" fx:id="infoLabel" layoutX="49.0" layoutY="14.0" text="Zakończono rozmowę" />
+      <Button id="ButtonOK" fx:id="ButtonOK" layoutX="38.0" layoutY="50.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="200.0" text="OK" />
+      <Label id="infoLabelOK" fx:id="infoLabel" layoutX="38.0" layoutY="23.0" prefWidth="200.0" text="Zakończono rozmowę" />
       <Label id="infoLabelEnd" layoutX="52.0" layoutY="14.0" text="Połączenie zerwane..." visible="false" />
    </children>
 </AnchorPane>
