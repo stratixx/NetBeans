@@ -6,41 +6,27 @@
 package peertopeerjavafx.Tools;
 
 /**
- * wątek służący do nieblokującego nawiązania połączenia
- * @author Skrzatt
+ * Abstrakcyjna klasa tworząca wątek nawiązujący połączenie
+ * @author Konrad Winnicki
  */
-public class ConnectionThread extends Thread{
-    
-    private Connection connection;
-    
-    public ConnectionThread( Connection connection )
-    {
-        this.connection = connection;
-        //Thread.currentThread()
-    }
+public abstract class ConnectionThread extends Thread{
     
     /**
-     * 
-     * @param connection 
+     * Abstrakcyjny setter obiektu połączenia
+     * @param connection nowy obiekt połączenia
      */
-    public void setConnection( Connection connection )
-    {
-        this.connection = connection;
-    }
+    public abstract void setConnection( Connection connection );
     
     /**
-     * 
-     * @return 
+     * abstrakcyjny getter połączenia
+     * @return obiekt połączenia
      */
-    public Connection getConnection(  )
-    {
-        return this.connection;
-    }
+    public abstract Connection getConnection(  );
     
     
+    /**
+     * Metoda uruchamiająca wątek
+     */
     @Override
-    public void run()
-    {
-        System.out.println("peertopeerjavafx.Tools.ConnectionThread.run()");
-    }
+    public abstract void run();
 }

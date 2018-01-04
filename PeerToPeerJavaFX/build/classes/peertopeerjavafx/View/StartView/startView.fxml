@@ -11,15 +11,21 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="300.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField id="adressIP" fx:id="adressIP" layoutX="52.0" layoutY="252.0" prefHeight="25.0" prefWidth="200.0" promptText="wpisz adres IP" text="localhost" />
-      <TextField id="adressPort" fx:id="adressPort" layoutX="52.0" layoutY="288.0" prefHeight="25.0" prefWidth="200.0" promptText="port" text="6000" />
-      <Button id="buttonTX" fx:id="buttonTX" layoutX="51.0" layoutY="322.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Klient" />
-      <Button id="buttonRX" fx:id="buttonRX" layoutX="184.0" layoutY="322.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Serwer" />
-      <Label id="labelStatus" fx:id="labelStatus" layoutX="74.0" layoutY="363.0" text="podaj dane i wybierz przycisk" />
+      <Button id="buttonTX" fx:id="buttonTX" layoutX="50.0" layoutY="347.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Klient" />
+      <Button id="buttonRX" fx:id="buttonRX" layoutX="184.0" layoutY="347.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Serwer" />
       <ImageView fitHeight="225.0" fitWidth="225.0" layoutX="38.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="14.0">
          <image>
             <Image url="@logo.jpg" />
          </image>
       </ImageView>
+      <VBox layoutX="50.0" layoutY="210.0" prefHeight="125.0" prefWidth="200.0">
+         <children>
+            <Label id="labelStatus" fx:id="labelStatus" prefHeight="25.0" prefWidth="200.0" text="Podaj adres i port" />
+            <Label prefHeight="25.0" prefWidth="200.0" text="Adres IP:" textAlignment="CENTER" />
+            <TextField id="adressIP" fx:id="adressIP" prefHeight="25.0" prefWidth="200.0" promptText="wpisz adres IP" text="localhost" />
+            <Label prefHeight="25.0" prefWidth="200.0" text="Port:" />
+            <TextField id="adressPort" fx:id="adressPort" prefHeight="25.0" prefWidth="200.0" promptText="port" text="6000" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

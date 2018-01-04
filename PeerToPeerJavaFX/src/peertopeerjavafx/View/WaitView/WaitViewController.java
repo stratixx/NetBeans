@@ -13,63 +13,75 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * FXML Controller class
+ * Klasa widoku okna oczekiwania
  *
- * @author Skrzatt
+ * @author Konrad Winnicki
  */
 public class WaitViewController extends Stage{
 
-    @FXML
-    private Label infoLabel;
-    @FXML
-    private Label statusLabel;
-    @FXML
-    private ProgressBar statusBar;
-    @FXML
-    private Button ButtonCancel;
+    // Napis 
+    //private final Label infoLabel;
+    // Napis informujący o stanie połączenia
+    private final Label statusLabel;
+    // Pasek postępu połączenia
+    private final ProgressBar statusBar;
+    // Przycisk potwierdzenia(wielofunkcyjny)
+    private final Button ButtonCancel;
+    // Zawartość okna, ładowany z pliku waitView.fxml
+    private final Parent content;
     
     
-    Parent content;
-    
-    public Parent getContent()
+    /**
+     * Konstruktor okna
+     * @param startViewStage Referencja do okna startowego
+     * @param callbacks Callbacki do przycisku
+     * @throws IOException
+     */
+    public WaitViewController( Stage startViewStage, WaitViewCallbacks callbacks ) throws IOException
     {
-        return content;
-    }
-    
-    public WaitViewController( Stage talkViewStage, WaitViewCallbacks callbacks ) throws IOException
-    {
-        super();
-        
+        //super();              
+        // Ustawienie jako okno nadrzędne
         this.initModality(Modality.WINDOW_MODAL);
-        this.initOwner(talkViewStage.getScene().getWindow());
-        content = FXMLLoader.load(getClass().getResource("waitView_.fxml"));
-        
-        infoLabel = (Label)content.lookup("#infoLabel");
-        statusLabel = (Label)content.lookup("#statusLabelDefault");
+        this.initOwner(startViewStage.getScene().getWindow());
+        // Załadowanie zawartości 
+        content = FXMLLoader.load(getClass().getResource("waitView_.fxml"));   
+        // Inicjacja obiektów     
+        //infoLabel = (Label)content.lookup("#infoLabel");
+        statusLabel = (Label)content.lookup("#statusLabel");
         statusBar = (ProgressBar)content.lookup("#statusBar");
-        ButtonCancel = (Button)content.lookup("#Button");
-        this.setScene(new Scene(content));
+        ButtonCancel = (Button)content.lookup("#Button");       
         
-        
+        // Ustawienie reakcji na przycisk
         ButtonCancel.setOnMouseClicked((MouseEvent event) -> {
             callbacks.buttonClicked();
             event.consume();
         });
         
+        // Ustawienie reakcji na żądanie zamknięcia okna
         this.setOnCloseRequest((WindowEvent event) -> {
             callbacks.onClose();
             System.out.println(".handle() on exit");
             event.consume();
         });
+        
+        // Ustawienie ikony i tytułu okna
+        this.getIcons().add(new Image(getClass().getResourceAsStream("/peertopeerjavafx/View/icon.jpg")));
+        this.setTitle("Komunikator PeerToPeer");
+        this.setResizable(false);
+        this.setScene(new Scene(content));
     }
     
     
+    /**
+     * Ukrycie i ustawienie stanu początkowego okna
+     */
     @Override
     public void hide()
     {
@@ -77,16 +89,13 @@ public class WaitViewController extends Stage{
         setStatusDefault();
     }
     
-    
+    /**
+     * Ustawienie stanu początkowego i pokazanie okna
+     */
     public void showView()
     {
         setStatusDefault();
         super.show();
-    }
-    
-    public void setElementVisible( String element, Boolean visible)
-    {
-        content.lookup(element).setVisible(visible);
     }
     
     /**

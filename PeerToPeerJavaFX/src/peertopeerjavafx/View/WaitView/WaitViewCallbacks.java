@@ -6,10 +6,18 @@
 package peertopeerjavafx.View.WaitView;
 
 /**
- *
- * @author Skrzatt
+ * Callbacki widoku oczekiwania
+ * @author Konrad Winnicki
  */
 public interface WaitViewCallbacks {
+    
+    /**
+     * Rekacja na przycisk potwierdzenia
+     */
     public void buttonClicked();
+
+    /**
+     * Reakcja na żadanie zamknięcia okna
+     */
     public void onClose();
 }

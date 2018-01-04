@@ -10,10 +10,7 @@
    <children>
       <Button id="Button" fx:id="Button" alignment="CENTER" contentDisplay="CENTER" layoutX="38.0" layoutY="96.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="OK" />
       <Label id="infoLabel" fx:id="infoLabel" layoutX="38.0" layoutY="14.0" prefHeight="25.0" prefWidth="200.0" text="Nawiązywanie połączenia..." textAlignment="CENTER" />
-      <Label id="statusLabelDefault" fx:id="statusLabel" layoutX="38.0" layoutY="33.0" prefHeight="25.0" prefWidth="200.0" text="W trakcie..." textAlignment="CENTER" />
-      <Label id="statusLabelOK" layoutX="14.0" layoutY="37.0" prefHeight="17.0" prefWidth="171.0" text="OK" textAlignment="CENTER" visible="false" />
+      <Label id="statusLabel" fx:id="statusLabel" layoutX="38.0" layoutY="33.0" prefHeight="25.0" prefWidth="200.0" text="W trakcie..." textAlignment="CENTER" />
       <ProgressBar id="statusBar" fx:id="statusBar" layoutX="38.0" layoutY="65.0" prefHeight="20.0" prefWidth="200.0" />
-      <Label id="statusLabelFail" layoutX="15.0" layoutY="37.0" prefHeight="17.0" prefWidth="149.0" text="Niepowodzenie!" visible="false" />
-      <Label id="statusLabelEnd" layoutX="15.0" layoutY="37.0" prefHeight="17.0" prefWidth="118.0" text="Zerwane" visible="false" />
    </children>
 </AnchorPane>

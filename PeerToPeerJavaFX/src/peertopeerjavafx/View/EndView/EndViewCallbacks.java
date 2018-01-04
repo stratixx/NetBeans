@@ -6,10 +6,18 @@
 package peertopeerjavafx.View.EndView;
 
 /**
- *
- * @author Skrzatt
+ * Callbacki widoku końcowego
+ * @author Konrad Winnicki
  */
 public interface EndViewCallbacks{
+    
+    /**
+     * Reakcja na przycisk OK
+     */
     public void buttonOKClicked();
+
+    /**
+     * Reakcja na żądanie zamknięcia okna
+     */
     public void onClose();
 }

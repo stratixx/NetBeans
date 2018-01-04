@@ -6,9 +6,11 @@
 package peertopeerjavafx.Tools;
 
 /**
- *
+ *  Enum zawierający typy połączenia
  * @author Skrzatt
  */
     public enum ConnectionType{
-        NONE, CLIENT, SERVER
+        NONE,   // Not used
+        CLIENT, // Połączenie jako klient - podłączam się do instancji serwerowej
+        SERVER  // Połączenie jako serwer - oczekuję na instancję kliencką
     }

@@ -12,8 +12,10 @@ import peertopeerjavafx.View.View;
 import peertopeerjavafx.Controller.Controller;
 
 /**
- *
- * @author Skrzatt
+ * Aplikacja komunikatora Peer To Peer oparta na 
+ * Widoku JavaFX
+ * Modelu z połączeniami Socket i ServerSocket
+ * @author Konrad Winnicki
  */
 public class PeerToPeerJavaFX extends Application{
     
@@ -21,7 +23,10 @@ public class PeerToPeerJavaFX extends Application{
     static View view;
     static Controller controller;
     
-    
+    /**
+     *  Stworzenie i zainicjowanie obiektów MVC
+     * @param args Parametry wywołania aplikacji
+     */
     public static void main(String[] args) 
     {
         model = new Model();
@@ -30,12 +35,12 @@ public class PeerToPeerJavaFX extends Application{
         
         model.setController(controller);
         view.setController(controller);   
-        
+                
         launch(args);
     }
     
     @Override
-    public void start(Stage primaryStage) throws Exception { 
+    public void start(Stage primaryStage) { 
         try
         {
             view.launch(primaryStage); 

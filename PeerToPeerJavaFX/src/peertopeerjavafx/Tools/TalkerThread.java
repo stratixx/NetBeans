@@ -7,36 +7,42 @@ package peertopeerjavafx.Tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
 
 /**
- *
- * @author Skrzatt
+ * Klasa wątku obsługującego nawiązane połączenie
+ * Odbiera dane od rozmówcy, 
+ * wysyłanie zrealizowane w metodzie kontrolera sendText()
+ * @author Konrad Winnicki
  */
 public class TalkerThread extends ConnectionThread{
     
-    private BufferedReader externalInput;
-    private List<String> internalInput;
+    // Obiekt połączenia
+    private Connection connect;
+    // Wejście danych z połączenia(Socket-a)
+    private final BufferedReader externalInput;
+    // Wejście danych obsługiwane(wyświetlane) przez program
+    private final List<String> internalInput;
     
+    /**
+     * Konstruktor klasy
+     * Tworzy wewnętrzny bufor danych wejściowych
+     * @param connection obiekt połączenia
+     */
     public TalkerThread(Connection connection) {
-        super(connection);
+        this.connect = connection;
         externalInput = connection.getExternalInput();
         internalInput = new ArrayList<>();
         connection.setInternalInput( internalInput );
     }
     
+    /**
+     * Procedura obsługi połączenia
+     */
     @Override
     public void run()
-    {         
-        Connection connect = super.getConnection();        
+    {                
         String userInput;
         
         try 
@@ -44,30 +50,35 @@ public class TalkerThread extends ConnectionThread{
             while( connect.isConnectionOK() )
             {
                 int c;
+                /*
+                Warunek ten zapewnia sprawdzanie czy połączenie jest
+                ciągle dostępne.
+                Metoda wywoływana w warunku zwraca -1 gdy połączenie jest niedostępne,
+                blokuje przebieg procedury gdy nie ma danych wejściowych,
+                zwraca jeden znak odebrany gdy odebrano dane.
+                Znak ten jest zapamiętywany i doklejany do danych wejściowych
+                */
                 if( (c=connect.getSocket().getInputStream().read()) ==(-1) )
                 {
-                    System.out.println("peertopeerjavafx.Tools.TalkerThread.run() connection end externaly");
+                    System.out.println("peertopeerjavafx.Tools.TalkerThread.run() connection closed externaly");
                     connect.setFail(true);
                     connect.close();
                     break;
                 }  
                 else
                 {
-                    //while( !input.ready() )
                     while ((userInput = externalInput.readLine()) != null)
                     {
                         if( !connect.isConnectionOK())
                             break;
-                        userInput = (char)c + userInput;
-                        c=0;
-                        char[] array = userInput.toCharArray();
-                        for(int n=0; n<array.length; n++)
-                            System.out.println((int)array[n]);
-                        if(!userInput.equals(""))
-                            internalInput.add(userInput);
                         
-                        System.out.println("peertopeerjavafx.Tools.TalkerThread.run() input text");
-                        Platform.runLater(TalkerThread.super.getConnection()::informObservers);                    
+                        userInput = (char)c + userInput; 
+                        c = 0;
+                        // wpisanie danych do wewnętrznego bufora danych
+                        internalInput.add( connect.getFriendName() + ": " + userInput);                        
+                        System.out.println("peertopeerjavafx.Tools.TalkerThread.run() input text"); 
+                        // poinformowanie obserwatorów co spowoduje odświeżenie widoku                        
+                        connect.informObservers();
                     }
                 }
             }
@@ -75,8 +86,28 @@ public class TalkerThread extends ConnectionThread{
         {
             System.out.println("peertopeerjavafx.Tools.TalkerThread.run() conection closed localy");
         }
-        Platform.runLater(TalkerThread.super.getConnection()::informObservers);
-        //connect.close();
+        connect.informObservers();
     }
     
+    // Settery i Gettery
+    
+    /**
+     * 
+     * @param newConnection nowy obiekt połączenia
+     */
+    @Override
+    public void setConnection( Connection newConnection)
+    {
+        this.connect = newConnection;
+    }
+    
+    /**
+     * 
+     * @return obiekt połączenia
+     */
+    @Override
+    public Connection getConnection()
+    {
+        return this.connect;
+    }
 }

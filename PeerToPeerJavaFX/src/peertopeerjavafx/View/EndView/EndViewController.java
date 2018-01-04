@@ -12,53 +12,65 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * FXML Controller class
- *
- * @author Skrzatt
+ * Klasa okna zakończenia połączenia
+ * @author Konrad Winnicki
  */
 public class EndViewController extends Stage {
 
-    @FXML
-    private Button buttonOK;
+    // Obiekt przyscisku OK
+    private final Button buttonOK;
+    // Obiekt napisu informującego
+    private final Label infoLabel;
+    // Obiekt zawierający wygląd okna, ładowany z pliku endView.fxml
+    private final Parent content;
     
-    @FXML
-    private Label infoLabel;
-
-    Parent content;
-    
-    public EndViewController( Stage endViewStage, EndViewCallbacks callbacks ) throws IOException
+    /**
+     * Konstruktor okna 
+     * @param talkViewStage Referencja do okna rozmowy
+     * @param callbacks Callbacki dla przycisków
+     * @throws IOException
+     */
+    public EndViewController( Stage talkViewStage, EndViewCallbacks callbacks ) throws IOException
     {
-        super();
-        
+        //super();
+        // Ustawienie jako okno nadrzędne
         this.initModality(Modality.WINDOW_MODAL);
-        this.initOwner(endViewStage.getScene().getWindow());
+        this.initOwner(talkViewStage.getScene().getWindow());
+        // Załadowanie zawartości
         content = FXMLLoader.load(getClass().getResource("endView_.fxml"));
-        
+        // Inicjacja obiektów
         buttonOK = (Button)content.lookup("#ButtonOK");
         infoLabel = (Label)content.lookup("#infoLabelOK");
         
-        this.setScene(new Scene(content));
-        //this.show();
-        
+        // Ustawienie reakcji na przycisk
         buttonOK.setOnMouseClicked((MouseEvent event) -> {
             callbacks.buttonOKClicked();
             event.consume();
         });
-        
+        // Ustawienie reakcji na żądanie zamknięcia okna
         this.setOnCloseRequest((WindowEvent event) -> {
             callbacks.onClose();
             event.consume();
         });
+           
+        // Ustawienie ikony i tytułu okna
+        this.getIcons().add(new Image(getClass().getResourceAsStream("/peertopeerjavafx/View/icon.jpg")));
+        this.setTitle("Komunikator PeerToPeer");
+        this.setResizable(false);
+        this.setScene(new Scene(content));
     }
     
     
-    
+    /**
+     * Ukrycie i ustawienie stanu początkowego okna
+     */
     @Override
     public void hide()
     {
@@ -66,29 +78,28 @@ public class EndViewController extends Stage {
         setStatusDefault();
     }
     
-    
+    /**
+     * Ustawienie stanu początkowego i pokazanie okna
+     */
     public void showView()
     {
         setStatusDefault();
         super.show();
     }
-    
-    public void setElementVisible( String element, Boolean visible)
-    {
-        content.lookup(element).setVisible(visible);
-    }
-    
+        
+    /**
+     * Ustawienie stanu początkowego
+     */
     public void setStatusDefault()
     {      
-        //setElementVisible("#infoLabelOK", true);
-        //setElementVisible("#infoLabelEnd", false);
         infoLabel.setText("Zakończono rozmowę");
     }
     
+    /**
+     * Ustawinie stanu po zakończeniu połączenia
+     */
     public void setStatusEnd()
     {        
-        //setElementVisible("#infoLabelOK", false);
-        //setElementVisible("#infoLabelEnd", true);
         infoLabel.setText("Połączenie zerwane");
     }
 }

@@ -6,10 +6,18 @@
 package peertopeerjavafx.View.TalkView;
 
 /**
- *
- * @author Skrzatt
+ * Callbacki widoku rozmowy
+ * @author Konrad Winnicki
  */
 public interface TalkViewCallbacks {
+    
+    /**
+     * Reakcja na przycisk wysyłania danych
+     */
     public void buttonSendClicked();
+
+    /**
+     * Reakcja na żądanie zamknięcia okna
+     */
     public void onClose();
 }
