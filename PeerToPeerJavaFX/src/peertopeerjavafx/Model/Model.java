@@ -86,17 +86,15 @@ public class Model implements ModelInterface, Observer {
     }
     
     /**
-     * Inicjacja pól obiektu Connection
+     * Ewentualne zamknięcie starego połączenia 
+     * inicjacja nowego obiektu Connection
      * @param connection Obiekt Connection zawierający dane połączenia
      */
     @Override
     public void setConnection( Connection connection )
     {
         if( this.connection!=null )
-        {
-            this.connection.close();
-            this.connection.deleteObservers();
-        }
+            stopConnection();
         this.connection = connection;
         this.connection.addObserver(this);
         //this.connection.setConnectionType( connection.getconnectionType() );
