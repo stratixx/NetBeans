@@ -45,9 +45,9 @@ public class Connection extends Observable{
     
     /**
      * Konstruktor obiektu połączenia
-     * @param connectionType // Typ połączenia
-     * @param adress // Adres hosta
-     * @param port // numer portu
+     * @param connectionType Typ połączenia
+     * @param adress Adres hosta
+     * @param port numer portu
      */
     public Connection( ConnectionType connectionType, String adress, int port)
     {
@@ -86,11 +86,11 @@ public class Connection extends Observable{
     }
     
     /**
-     * Inicjacja wątku obsługi nawiązanego połączenia
-     * Metoda wywoływana przez wątek nawiązywania połączenia po pomyślnej próbie. 
+     * Inicjacja wątku obsługi nawiązanego połączenia,
+     * Metoda wywoływana przez wątek nawiązywania połączenia po pomyślnej próbie, 
      * Metoda oczekuje na koniec pracy wątku nawiązywania połączenia i 
      * uruchamia na jego miejscu nowy wątek - 
-     * wątek obsługi nawiązanego połączenia 
+     * wątek obsługi nawiązanego połączenia.
      */
     public void startTalkerThread()
     {
@@ -143,8 +143,8 @@ public class Connection extends Observable{
     }
     
     /**
-     * Dodanie zadania wątkowi JavaFX
-     * poinformowanie obserwatorów połączenia
+     * Dodanie zadania wątkowi JavaFX,
+     * poinformowanie obserwatorów połączenia,
      * obserwatorem jest obiekt Modelu
      */
     synchronized public void informObservers()
@@ -156,7 +156,7 @@ public class Connection extends Observable{
     }
     
     /**
-     *  Wątek nawiązujący połączenie zakończył pracę z sukcesem
+     *  Metoda wywoływana automatycznie gdy wątek nawiązujący połączenie zakończył pracę z sukcesem
      */
     public void connected()
     {        
