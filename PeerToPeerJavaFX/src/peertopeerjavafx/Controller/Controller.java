@@ -127,7 +127,7 @@ public class Controller implements ControllerModelInterface,
         view.getEndView().setStatusEnd();
         view.getWaitView().setStatusEnd();
         if( view.getTalkView().isShowing() )
-            view.getEndView().show();
+            view.getEndView().showView( view.getTalkView().getX(), view.getTalkView().getY() );
     }
     
     /**

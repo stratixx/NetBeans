@@ -6,10 +6,14 @@
 package peertopeerjavafx.Tools;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Klasa wątku nawiązywania połączenia instancji serwerowej
@@ -44,6 +48,8 @@ public class ServerThread extends ConnectionThread{
         {
             // Utworzenie ServerSocket, wyjątek gdy port zajęty
             serverSocket = new ServerSocket(connect.getPort());
+            // Ustawienie timeout
+            serverSocket.setSoTimeout(5000);
             // Oczekiwanie na połączenie
             socket = serverSocket.accept();
             // Zamknięcie serverSocketa po nawiązaniu połączenia
@@ -65,6 +71,13 @@ public class ServerThread extends ConnectionThread{
             // inicjacja wątku obsługi połączenia
             connect.startTalkerThread();
             System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() OK");
+        }
+        catch( SocketTimeoutException e )
+        {
+            try { serverSocket.close(); } catch (IOException ex) {}     
+            connect.setConnected(false);
+            connect.setFail(true);  
+            System.out.println("peertopeerjavafx.Tools.Connection.startServerConnection() Timeout");     
         }
         catch( Exception e )
         {

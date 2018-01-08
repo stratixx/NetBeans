@@ -7,7 +7,6 @@ package peertopeerjavafx.View.StartView;
 
 
 import java.io.IOException;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -61,7 +60,7 @@ public class StartViewController extends Stage{
         buttonTX.setOnMouseClicked((MouseEvent event) -> {
             Connection connect =
                     new Connection(ConnectionType.CLIENT, adressIP.getText(), Integer.parseInt(adressPort.getText()));
-            calbacks.buttonTXClicked(connect);
+            calbacks.buttonClicked(connect);
             event.consume();
         });
         
@@ -69,7 +68,7 @@ public class StartViewController extends Stage{
         buttonRX.setOnMouseClicked((MouseEvent event) -> {
             Connection connect =
                     new Connection(ConnectionType.SERVER, adressIP.getText(), Integer.parseInt(adressPort.getText()));
-            calbacks.buttonRXClicked(connect);
+            calbacks.buttonClicked(connect);
             event.consume();
         });        
            
@@ -78,5 +77,18 @@ public class StartViewController extends Stage{
         this.setTitle("Komunikator PeerToPeer");
         this.setResizable(false);
         this.setScene(new Scene(content));   
-    }    
+    }        
+    
+    /**
+     * Ustawienie stanu początkowego i pokazanie okna
+     * @param x pozycja x na ekranie
+     * @param y pozycja y na ekranie
+     */
+    public void showView( double x, double y)
+    {
+        this.setX(x);
+        this.setY(y);
+        //setStatusDefault();
+        super.show();
+    }
 }

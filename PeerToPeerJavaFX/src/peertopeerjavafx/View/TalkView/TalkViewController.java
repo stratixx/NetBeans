@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -52,7 +54,16 @@ public class TalkViewController extends Stage{
         textInput = (TextArea)content.lookup("#textInput");
         //scroller = (ScrollBar)content.lookup("#scroller");
         
-        // Ustawienie reakcji na przycisk
+        // Reakcja na enter
+        textInput.setOnKeyPressed((KeyEvent event) -> {            
+            if (event.getCode().equals(KeyCode.ENTER) && !event.isShiftDown() )
+            {
+                callbacks.buttonSendClicked();
+                event.consume();
+            }
+        });
+        
+        // Ustawienie reakcji na przycisk send
         buttonSend.setOnMouseClicked((MouseEvent event) -> {
             callbacks.buttonSendClicked();
             event.consume();
@@ -69,6 +80,20 @@ public class TalkViewController extends Stage{
         this.setTitle("Komunikator PeerToPeer");
         this.setResizable(false);
         this.setScene(new Scene(content));
+    }
+    
+    
+    /**
+     * Ustawienie stanu początkowego i pokazanie okna
+     * @param x pozycja x na ekranie
+     * @param y pozycja y na ekranie
+     */
+    public void showView( double x, double y)
+    {
+        this.setX(x);
+        this.setY(y);
+        //setStatusDefault();
+        super.show();
     }
     
     /**

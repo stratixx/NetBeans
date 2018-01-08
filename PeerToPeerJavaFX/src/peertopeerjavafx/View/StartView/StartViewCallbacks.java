@@ -13,15 +13,10 @@ import peertopeerjavafx.Tools.Connection;
  */
 public interface StartViewCallbacks {
     
-    /**
-     * Reakcja na przycisk TX/Klient
-     * @param connect nowy obiekt połączenia zawierający adres i port
-     */
-    public void buttonTXClicked( Connection connect );
 
     /**
-     * Reakcja na przycisk RX/Serwer
+     * Reakcja na przycisk RX/Serwer i TX/Klient
      * @param connect nowy obiekt połączenia zawierający adres i port
      */
-    public void buttonRXClicked( Connection connect );
+    public void buttonClicked( Connection connect );
 }

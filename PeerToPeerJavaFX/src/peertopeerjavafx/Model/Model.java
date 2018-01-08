@@ -93,8 +93,8 @@ public class Model implements ModelInterface, Observer {
     @Override
     public void setConnection( Connection connection )
     {
-        if( this.connection!=null )
-            stopConnection();
+        //if( this.connection!=null )
+        //    stopConnection();
         this.connection = connection;
         this.connection.addObserver(this);
         //this.connection.setConnectionType( connection.getconnectionType() );

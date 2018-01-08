@@ -4,9 +4,17 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/PeerToPeerJavaFX.java</file>
-            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/WaitWindowViewController.java</file>
-            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/TalkViewController.java</file>
-            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/StartViewController.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/Controller/Controller.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/Model/Model.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/Tools/Connection.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/StartView/StartViewCallbacks.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/EndView/EndViewCallbacks.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/EndView/EndViewController.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/WaitView/WaitViewController.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/View.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/Tools/ServerThread.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/StartView/StartViewController.java</file>
+            <file>file:/C:/Users/konra/Documents/Programowanie/NetBeans/PeerToPeerJavaFX/src/peertopeerjavafx/View/TalkView/TalkViewController.java</file>
         </group>
     </open-files>
 </project-private>

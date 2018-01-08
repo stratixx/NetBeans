@@ -47,14 +47,8 @@ public class View implements ViewInterface
         // Callbacki widoku startowego
         StartViewCallbacks startViewCallbacks = new StartViewCallbacks() {
             @Override
-            public void buttonTXClicked( Connection connect ) {
-                waitView.showView();
-                controller.startConnection(connect);
-            }
-
-            @Override
-            public void buttonRXClicked( Connection connect ) {
-                waitView.showView();
+            public void buttonClicked( Connection connect ) {
+                waitView.showView(startView.getX(), startView.getY());
                 controller.startConnection(connect);
             }
         };
@@ -63,7 +57,7 @@ public class View implements ViewInterface
         WaitViewCallbacks waitViewCallbacks = new WaitViewCallbacks() {
             @Override
             public void buttonClicked() {
-                if( controller.isConnectionOK() ) { talkView.show(); waitView.hide(); startView.hide(); }
+                if( controller.isConnectionOK() ) { talkView.showView(startView.getX(), startView.getY()); waitView.hide(); startView.hide(); }
                 else { controller.stopConnection(); waitView.hide(); }
             }
 
@@ -96,22 +90,16 @@ public class View implements ViewInterface
             @Override
             public void onClose() {
                 controller.stopConnection();
-                endView.show();
+                endView.showView(talkView.getX(), talkView.getY());
             }
         };
            
         // Callbacki widoku końcowego
         EndViewCallbacks endViewCallbacks = new EndViewCallbacks() {
             @Override
-            public void buttonOKClicked() 
+            public void confirmAction() 
             { 
-                talkView.hide(); endView.hide(); startView.show(); 
-            }
-            
-            @Override
-            public void onClose() 
-            {                 
-                talkView.hide(); endView.hide(); startView.show(); 
+                talkView.hide(); endView.hide(); startView.showView(talkView.getX(), talkView.getY()); 
             }
         };
         

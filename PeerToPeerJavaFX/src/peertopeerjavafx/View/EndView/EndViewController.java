@@ -51,12 +51,12 @@ public class EndViewController extends Stage {
         
         // Ustawienie reakcji na przycisk
         buttonOK.setOnMouseClicked((MouseEvent event) -> {
-            callbacks.buttonOKClicked();
+            callbacks.confirmAction();
             event.consume();
         });
         // Ustawienie reakcji na żądanie zamknięcia okna
         this.setOnCloseRequest((WindowEvent event) -> {
-            callbacks.onClose();
+            callbacks.confirmAction();
             event.consume();
         });
            
@@ -80,10 +80,14 @@ public class EndViewController extends Stage {
     
     /**
      * Ustawienie stanu początkowego i pokazanie okna
+     * @param x pozycja x na ekranie
+     * @param y pozycja y na ekranie
      */
-    public void showView()
+    public void showView( double x, double y)
     {
-        setStatusDefault();
+        this.setX(x+(300-275)/2);
+        this.setY(y+(400-150)/2);
+        //setStatusDefault();
         super.show();
     }
         

@@ -72,6 +72,7 @@ public class Connection extends Observable{
     {
         connectionThread = new ClientThread( this );
         connectionThread.setName("ClientConnectionThread");
+        connectionThread.setDaemon(true);
         connectionThread.start();        
     }
     
@@ -82,6 +83,7 @@ public class Connection extends Observable{
     {
         connectionThread = new ServerThread( this );
         connectionThread.setName("ServerConnectionThread");
+        connectionThread.setDaemon(true);
         connectionThread.start();             
     }
     
@@ -103,9 +105,11 @@ public class Connection extends Observable{
             // Start wątku obsługi połączenia
             connectionThread = new TalkerThread( conn );
             connectionThread.setName("TalkerThread");
+            connectionThread.setDaemon(true);
             connectionThread.start();
         });
         thread.setName("StarterForTalkerThread");
+        thread.setDaemon(true);
         thread.start();
     }
     
@@ -119,8 +123,8 @@ public class Connection extends Observable{
         System.out.println("peertopeerjavafx.Tools.Connection.close()");
         
         try
-        {
-            if( serverSocket!=null ) serverSocket.close();
+        {            
+            //if( serverSocket!=null ) serverSocket.close();
             if( socket!=null ) socket.close();
             if( externalInput!=null ) externalInput.close();
             if( output!=null ) output.close();

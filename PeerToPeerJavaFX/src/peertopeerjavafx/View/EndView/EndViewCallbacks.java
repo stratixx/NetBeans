@@ -12,12 +12,7 @@ package peertopeerjavafx.View.EndView;
 public interface EndViewCallbacks{
     
     /**
-     * Reakcja na przycisk OK
+     * Reakcja na przycisk OK i żadanie zamknięcia okna
      */
-    public void buttonOKClicked();
-
-    /**
-     * Reakcja na żądanie zamknięcia okna
-     */
-    public void onClose();
+    public void confirmAction();
 }

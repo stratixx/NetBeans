@@ -75,7 +75,7 @@ public class WaitViewController extends Stage{
         this.getIcons().add(new Image(getClass().getResourceAsStream("/peertopeerjavafx/View/icon.jpg")));
         this.setTitle("Komunikator PeerToPeer");
         this.setResizable(false);
-        this.setScene(new Scene(content));
+        this.setScene(new Scene(content));   
     }
     
     
@@ -91,9 +91,13 @@ public class WaitViewController extends Stage{
     
     /**
      * Ustawienie stanu początkowego i pokazanie okna
+     * @param x pozycja x na ekranie
+     * @param y pozycja y na ekranie
      */
-    public void showView()
+    public void showView( double x, double y)
     {
+        this.setX(x+(300-275)/2);
+        this.setY(y+(400-150)/2);
         setStatusDefault();
         super.show();
     }
