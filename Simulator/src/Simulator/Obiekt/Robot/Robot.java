@@ -6,7 +6,7 @@
 package Simulator.Obiekt.Robot;
 
 import Simulator.Obiekt.Obiekt;
-import Simulator.Obiekt.Robot.Czujnik.Czujnik;
+import Simulator.Obiekt.Robot.Czujnik.Sensor;
 import Simulator.Obiekt.Robot.Czujnik.LIDAR;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.Figura.Kolo;
@@ -23,16 +23,15 @@ import javafx.geometry.Point2D;
 public class Robot extends Obiekt{
     
     //private List<Przeszkoda> elementCalc; // lista przeliczonych punktów robota
-    private List<Czujnik> czujnik;
+    private List<Sensor> sensor;
     
     
     public Robot( double x, double y ) 
     {        
         super( new Point2D(x, y), true, false, "Robot");
         
-        czujnik = new ArrayList<>();        
+        sensor = new ArrayList<>();        
         
-        czujnik.add( new LIDAR( this ) );
         
         List<Figura> element = super.getElementList();        
         double x0 = -25;
@@ -58,40 +57,37 @@ public class Robot extends Obiekt{
         super.setElementList(element);
     }
     
-    public Czujnik getSensor(String sensorName)
+    public Sensor getSensor(String sensorName)
     {
-        for (Czujnik czujnik1 : czujnik) {
+        for (Sensor czujnik1 : sensor) {
             if( czujnik1.getName().equals(sensorName))
                 return czujnik1;
         }
         return null;
     }
     
-    
-    /**
-     * Próba przemieszczenia obiektu
-     * oryginalna pozycja w celu minimalizacji błędów numerycznych 
-     * jest przesuwana ale nie jest obracana o kąt 
-     * wynik obliczeń uwzględniający wszystkie poprzednie transformacje
-     * zawarty jest w zmiennej positionCalc
-     * @param deltaX przemieszczenie obiektu wzdłóż osi X
-     * @param deltaY przemieszczenie obiektu wzdłóż osi Y
-     * @param deltaTheta obrócenie obiektu wokół osi obrotu o kąt Theta
-     * @return
-     */    
-    @Override    
-    public Boolean move( double deltaT )
+    public Boolean addSensor( Sensor newSensor )
     {
-        czujnik.forEach((sensor) -> {
-            sensor.tick( deltaT );
-        });
-        return super.move(deltaT);
+        return sensor.add(newSensor);
     }
     
-    @Override
-    public void draw( Drawer drawer )
-    {
-        super.draw(drawer);
+    public List<Sensor> getSensor()
+    {       
+        return sensor;
+    }
+    
+    
+    public void tick( double deltaT )
+    {        
+        if( !this.move( deltaT ))
+        {
+            this.setVelocity( this.getVelocity().multiply(-1.1) );
+            this.setRotationSpeed( -1.1*this.getRotationSpeed() );
+        }
+        
+        sensor.forEach((sensor) -> {
+            sensor.tick( deltaT );
+        });
     }
     
 }

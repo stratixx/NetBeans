@@ -6,6 +6,7 @@ import Simulator.Obiekt.Collision;
 import Simulator.Obiekt.Latarnia.Latarnia;
 import Simulator.Obiekt.Obiekt;
 import Simulator.Obiekt.Przeszkoda.*;
+import Simulator.Obiekt.Robot.Czujnik.LIDAR;
 import Simulator.Obiekt.Robot.Robot;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.RefreshThread;
@@ -73,7 +74,8 @@ public class Model implements ModelInterface {
         robot = new Robot( 100, 80 );
         robot.setTheta(90);
         robot.setVelocity(new Point2D(100, 0));
-        robot.setRotationSpeed(0);
+        robot.setRotationSpeed(1);
+        robot.addSensor( new LIDAR( robot ) );
         
         przeszkoda = new ArrayList<>();
         przeszkoda.add( new FourDots(new Point2D(400, 420), 60, 50, 10));
@@ -83,7 +85,7 @@ public class Model implements ModelInterface {
         przeszkoda.add( new PieciokatForemny(new Point2D(130,315)));
         //przeszkoda.add( new Prostokat(50, 300, 50, 50) );
         
-        bariera = new ArrayList<>();
+        //bariera = new ArrayList<>();
         
         cel = new Cel( new Point2D(700, 500));
         
@@ -95,7 +97,7 @@ public class Model implements ModelInterface {
         
         obiekt.add( robot );
         obiekt.addAll( przeszkoda );
-        obiekt.addAll(bariera);
+        //obiekt.addAll(bariera);
         obiekt.add(cel);
         obiekt.addAll( latarnia );
         
@@ -151,12 +153,8 @@ public class Model implements ModelInterface {
     public void moveObjects( double deltaT )
     {            
             
-                if( !robot.move( deltaT ))
-                {
-                    robot.setVelocity( robot.getVelocity().multiply(-1) );
-                    robot.setRotationSpeed( -robot.getRotationSpeed() );
-                }
-                //robot.getSensor("LIDAR").scan();
+                
+                robot.tick(deltaT);
                                 
                 przeszkoda.forEach((element) -> 
                 {
@@ -186,7 +184,9 @@ public class Model implements ModelInterface {
         drawer.getGC().setFill(Color.WHITESMOKE);
         drawer.getGC().fillRect(0, 0, 800, 600); 
         robot.draw(drawer);
-        //robot.getSensor("LIDAR").draw(drawer);
+        robot.getSensor().forEach((sensor) -> {
+            sensor.draw(drawer);
+        });
     }
     
 }

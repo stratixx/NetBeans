@@ -11,7 +11,7 @@ import Simulator.Tools.Drawer;
  *
  * @author Skrzatt
  */
-abstract public class Czujnik {
+abstract public class Sensor {
     
     abstract public void scan();
     

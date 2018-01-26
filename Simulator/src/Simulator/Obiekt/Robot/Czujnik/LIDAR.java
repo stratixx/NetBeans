@@ -20,7 +20,7 @@ import javafx.scene.paint.Color;
  *
  * @author Skrzatt
  */
-public class LIDAR extends Czujnik {
+public class LIDAR extends Sensor {
     
     List<Point> points;
     final private double pointsLifeTime;
@@ -65,7 +65,7 @@ public class LIDAR extends Czujnik {
     
     @Override
     public void scan() {
-        //System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.scan()");
+        //System.out.println("Simulator.Obiekt.Robot.Sensor.LIDAR.scan()");
         for( int n=0; n<360; n=n+(360/beamsNumber))
         {
             beams.add( new SensorBeam( this, robot.getOffset(), MyMath.rotate(vectorOrginal, n), robot.getID()));    
@@ -89,7 +89,7 @@ public class LIDAR extends Czujnik {
                 if( !points.contains( p ) )
                     points.add( p );
                 //else
-                    //System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() contains: "+points.size());
+                    //System.out.println("Simulator.Obiekt.Robot.Sensor.LIDAR.tick() contains: "+points.size());
             }
                 //System.out.println( "DISTANCE: " + beam.getOffset().distance(beam.getStartPosition()) + "; " );
             return !beam.isActive();
@@ -98,7 +98,7 @@ public class LIDAR extends Czujnik {
         points.removeIf((point) -> {
             if( (point.getCreationTime()+pointsLifeTime)<time )
                 {
-                    //System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() delete");
+                    //System.out.println("Simulator.Obiekt.Robot.Sensor.LIDAR.tick() delete");
                     return true;
                 }
             return false;
