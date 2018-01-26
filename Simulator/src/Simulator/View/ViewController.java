@@ -5,11 +5,12 @@
  */
 package Simulator.View;
 
+import Simulator.Tools.Drawer;
 import java.io.IOException;
 import java.net.URL;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 
 /**
  * klasa abstrakcyjna rozszerzana przez konkretne widoki, 
@@ -20,7 +21,7 @@ abstract public class ViewController {
     
     private View view;
     private Parent content;
-    private GraphicsContext graphic;    
+    private Drawer drawer;   
     private String viewName;
     
     /**
@@ -70,15 +71,15 @@ abstract public class ViewController {
     {
         return this.content;
     }
-    
-    public void setGraphicsContext( GraphicsContext newGraphic )
+     
+    public Drawer getDrawer()
     {
-        this.graphic = newGraphic;
+        return drawer;
     }
      
-    public GraphicsContext getGraphicsContext()
+    public void setDrawer( Drawer newDrawer)
     {
-        return this.graphic;
+        drawer = newDrawer;
     }
     
     public void setViewName( String newViewName )
@@ -89,5 +90,10 @@ abstract public class ViewController {
     public String getViewName()
     {
         return this.viewName;
-    }
+    }  
+    
+    public Pane getPane()
+    {
+        return null;
+    }  
 }

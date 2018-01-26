@@ -5,13 +5,10 @@ import Simulator.Controller.ModelInterface;
 import Simulator.Obiekt.Collision;
 import Simulator.Obiekt.Latarnia.Latarnia;
 import Simulator.Obiekt.Obiekt;
-import Simulator.Obiekt.Przeszkoda.Cel;
-import Simulator.Obiekt.Przeszkoda.FourDots;
-import Simulator.Obiekt.Przeszkoda.Przeszkoda;
-import Simulator.Obiekt.Przeszkoda.Skala;
+import Simulator.Obiekt.Przeszkoda.*;
 import Simulator.Obiekt.Robot.Robot;
 import Simulator.Tools.Drawer;
-import Simulator.Tools.Figura.Prostokat;
+import Simulator.Tools.RefreshThread;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +33,7 @@ public class Model implements ModelInterface {
     // cel robota
     private Przeszkoda cel;
     
-        Thread thread;
+    private RefreshThread refreshThread;
     
     /**
      * Obiekt kontrolera
@@ -74,15 +71,16 @@ public class Model implements ModelInterface {
         };
         
         robot = new Robot( 100, 80 );
-        robot.setTheta(180);
+        robot.setTheta(90);
         robot.setVelocity(new Point2D(100, 0));
         robot.setRotationSpeed(0);
         
         przeszkoda = new ArrayList<>();
-        przeszkoda.add( new FourDots(new Point2D(350, 300), 60, 50, 10));
+        przeszkoda.add( new FourDots(new Point2D(400, 420), 60, 50, 10));
         //przeszkoda.add( new FourDots(new Point2D(180, 200), 60, 50, 10));
-        przeszkoda.add( new FourDots(new Point2D(250, 450), 60, 50, 10));
         przeszkoda.add( new Skala(new Point2D(620,275)));
+        przeszkoda.add( new FourDots(new Point2D(250, 450), 60, 50, 10));
+        przeszkoda.add( new PieciokatForemny(new Point2D(130,315)));
         //przeszkoda.add( new Prostokat(50, 300, 50, 50) );
         
         bariera = new ArrayList<>();
@@ -112,6 +110,13 @@ public class Model implements ModelInterface {
             System.out.println( element.toString() );
         });
         
+        refreshThread = new RefreshThread(100.0) {
+            @Override
+            public void threadProcedure( double deltaT) {
+                moveObjects( deltaT );
+            }
+        };
+        refreshThread.setName("ModelRefreshThread");
     }
     @Override
     public void drawObjects( Drawer drawer )
@@ -120,37 +125,41 @@ public class Model implements ModelInterface {
         drawer.getGC().fillRect(0, 0, 800, 600);      
         obiekt.forEach((element) -> 
         { 
+            //System.out.println(element.toString());
             element.draw( drawer ); 
         });
     }
     
     @Override
     public void startThread()
+    {        
+        refreshThread.startThread();
+    }
+    
+    @Override
+    public void stopThread()
     {
-        thread = new Thread(() -> {
-            int n=0;
-            final int f=100;
-            final double deltaT = 1/(new Double(f));
+        refreshThread.stopThread();
+    }
+    
+    @Override
+    public void pauseThread()
+    {
+        refreshThread.pauseThread();
+    }
+    
+    public void moveObjects( double deltaT )
+    {            
             
-            Boolean stateRobot = true;
-            int sign = 1;
-            int przeszkodaSign = 1;
-            
-            while(!Thread.interrupted())
-            {
-                if(n>500)
-                    n=0;
-                else
-                    n++;
-                //if(false)
                 if( !robot.move( deltaT ))
                 {
                     robot.setVelocity( robot.getVelocity().multiply(-1) );
                     robot.setRotationSpeed( -robot.getRotationSpeed() );
                 }
-                robot.getSensor(0).scan();
+                robot.getSensor("LIDAR").scan();
                                 
-                przeszkoda.forEach((element) -> {
+                przeszkoda.forEach((element) -> 
+                {
                     if(element.getVelocity().magnitude()<=0.001 && element.getRotationSpeed()<=1) 
                     {
                         //element.setVelocity(new Point2D(0.25*20, 0*0.25*-1));
@@ -161,23 +170,7 @@ public class Model implements ModelInterface {
                         element.setVelocity( element.getVelocity().multiply(-1) );
                         element.setRotationSpeed( -element.getRotationSpeed() );
                     }
-                }); 
-                
-                try {
-                    Thread.sleep(1000/f);
-                } catch (InterruptedException ex) {
-
-                }
-            }
-        });
-        thread.setDaemon(true);
-        thread.setName("ModelObjectMover100Hz");
-        thread.start();
-    }
-    
-    public void stopThread()
-    {
-        thread.interrupt();
+                });            
     }
     
     /**
@@ -186,6 +179,14 @@ public class Model implements ModelInterface {
      */
     public void setController(ControllerModelInterface controller){
         this.controller = controller;
+    }
+
+    @Override
+    public void drawRobot(Drawer drawer) {
+        drawer.getGC().setFill(Color.WHITESMOKE);
+        drawer.getGC().fillRect(0, 0, 800, 600); 
+        robot.draw(drawer);
+        robot.getSensor("LIDAR").draw(drawer);
     }
     
 }

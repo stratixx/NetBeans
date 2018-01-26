@@ -5,6 +5,7 @@
  */
 package Simulator.View.RobotView;
 
+import Simulator.Tools.Drawer;
 import Simulator.View.ViewController;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,57 +38,23 @@ public class RobotView extends ViewController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("Simulator.View.RobotView.RobotView.initialize()");
-        
+    public void initialize(URL url, ResourceBundle rb) {        
         super.setViewName("Robot");
-        super.setGraphicsContext( canvas.getGraphicsContext2D() );  
-        
+        super.setDrawer( new Drawer(canvas.getGraphicsContext2D()) );  
         pane.setStyle("-fx-background-color: black");        
-        getGraphicsContext().setFill(Color.WHITESMOKE);
-        getGraphicsContext().fillRect(0, 0, 800, 600);
-    }    
-    
-    public void echo()
-    {
-        System.out.println("Simulator.View.RobotView.RobotView.echo()");
-    }
-
-    
+        super.getDrawer().setFill(Color.WHITESMOKE);
+        super.getDrawer().fillRect(0, 0, 800, 600);
+    }        
     
     
     /////////////////////////// Settery i gettery ///////////////////////////
     
     
     
+    @Override
     public Pane getPane()
     {
         return this.pane;
     }
-    
-    public Image getImage()
-    {
-        return robotImageView.getImage();
-    }
 
-    private void ImageOnMouseMoved(MouseEvent event) {
-        System.out.println("Simulator.View.RobotView.RobotView.ImageOnMouseMoved()");
-        //event.consume();
-    }
-
-    @FXML
-    private void paneOnMouseExited(MouseEvent event) {
-        System.out.println("Simulator.View.RobotView.RobotView.paneOnMouseExited()");
-    }
-
-    @FXML
-    private void paneOnMouseEntered(MouseEvent event) {
-        System.out.println("Simulator.View.RobotView.RobotView.paneOnMouseEntered()");
-    }
-
-    @FXML
-    private void paneOnMouseMoved(MouseEvent event) {
-        //System.out.println("Simulator.View.RobotView.RobotView.paneOnMouseMoved()");
-        //event.consume();
-    }
 }

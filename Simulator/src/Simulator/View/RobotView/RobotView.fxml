@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane fx:id="pane" onMouseEntered="#paneOnMouseEntered" onMouseExited="#paneOnMouseExited" onMouseMoved="#paneOnMouseMoved" prefHeight="620.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Simulator.View.RobotView.RobotView">
+<Pane fx:id="pane" prefHeight="620.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Simulator.View.RobotView.RobotView">
    <children>
       <Canvas fx:id="canvas" height="600.0" layoutX="10.0" layoutY="10.0" width="800.0" />
    </children>

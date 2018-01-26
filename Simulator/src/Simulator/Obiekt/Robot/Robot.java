@@ -11,10 +11,7 @@ import Simulator.Obiekt.Robot.Czujnik.LIDAR;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.Figura.Kolo;
 import Simulator.Tools.Figura.Figura;
-import Simulator.Tools.Figura.Prostokat;
-import Simulator.Tools.Figura.Trojkat;
 import Simulator.Tools.Figura.Wielokat;
-import Simulator.Tools.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
@@ -51,8 +48,7 @@ public class Robot extends Obiekt{
             add( new Point2D(x0+width,y0+height));
             add( new Point2D(x0,y0+height));
         }}));
-        //element.add( new Prostokat(x0, y0, width, height) );
-        //element.add( new Trojkat(new Point2D(x0, y0), new Point2D(x0+width, y0), new Point2D(x0+width/2, y0-height/4) ));
+
         element.add( new Kolo(0, -55, 10));        
         element.add( new Kolo(-width/2, -30, 10));
         element.add( new Kolo(-width/2, 30, 10));
@@ -62,9 +58,13 @@ public class Robot extends Obiekt{
         super.setElementList(element);
     }
     
-    public Czujnik getSensor(int n)
+    public Czujnik getSensor(String sensorName)
     {
-        return czujnik.get(n);
+        for (Czujnik czujnik1 : czujnik) {
+            if( czujnik1.getName().equals(sensorName))
+                return czujnik1;
+        }
+        return null;
     }
     
     
@@ -92,9 +92,6 @@ public class Robot extends Obiekt{
     public void draw( Drawer drawer )
     {
         super.draw(drawer);
-        czujnik.forEach((sensor) -> {
-            sensor.draw(drawer);
-        });
     }
     
 }

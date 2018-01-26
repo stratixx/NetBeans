@@ -8,6 +8,7 @@ package Simulator.View.MainView;
 import Simulator.View.ViewController;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -28,13 +29,6 @@ import javafx.scene.layout.Pane;
 public class MainView extends ViewController implements Initializable {
 
     @FXML
-    public Label label1;
-    @FXML
-    public Button button1;
-    @FXML
-    private Button button2;
-    private Label labelStatus;
-    @FXML
     private Pane pane;
     @FXML
     private TabPane tabPane;
@@ -43,9 +37,13 @@ public class MainView extends ViewController implements Initializable {
     @FXML
     private AnchorPane startView;
     @FXML
-    public Label mouseLabel;
+    private Button buttonStart;
     @FXML
-    public ToggleButton enableButton;
+    private Button buttonStop;
+    @FXML
+    private Label labelMousePosition;
+    @FXML
+    private Button buttonPause;
 
     /**
      * Initializes the controller class.
@@ -62,8 +60,9 @@ public class MainView extends ViewController implements Initializable {
     }    
 
 
+    @FXML
     private void paneOnMouseMoved(MouseEvent event) {
-        labelStatus.setText(Double.toString( event.getX() )+"|"+Double.toString( event.getY() ));
+        labelMousePosition.setText( event.getX()+"|"+event.getY());
     }
     
     
@@ -75,6 +74,21 @@ public class MainView extends ViewController implements Initializable {
         return this.pane;
     }
     
+    public Button getButtonStart()
+    {
+        return buttonStart;
+    }
+    
+    public Button getButtonPauza()
+    {
+        return buttonPause;
+    }
+    
+    public Button getButtonStop()
+    {
+        return buttonStop;
+    }
+    
     public void addNodeAsNewTab( Node tabNode, String tabTitle )
     {      
         Tab newTab = new Tab(tabTitle);
@@ -82,14 +96,20 @@ public class MainView extends ViewController implements Initializable {
         tabPane.getTabs().add( newTab );
     }
 
+
     @FXML
-    private void paneOnMouseExited(MouseEvent event) {
-        System.out.println("Simulator.View.MainView.MainView.paneOnMouseExited()");
+    private void buttonStartOnAction(ActionEvent event) {
+        super.getView().buttonStartAction( event );
     }
 
     @FXML
-    private void paneOnMouseEntered(MouseEvent event) {
-        System.out.println("Simulator.View.MainView.MainView.paneOnMouseEntered()");
+    private void buttonPauseOnAction(ActionEvent event) {
+        super.getView().buttonPauseAction( event );
+    }
+
+    @FXML
+    private void buttonStopOnAction(ActionEvent event) {
+        super.getView().buttonStopAction( event );
     }
 
 }

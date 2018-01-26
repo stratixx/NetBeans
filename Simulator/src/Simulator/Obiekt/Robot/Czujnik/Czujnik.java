@@ -33,4 +33,6 @@ abstract public class Czujnik {
         
     }
     
+    abstract public String getName();
+    
 }

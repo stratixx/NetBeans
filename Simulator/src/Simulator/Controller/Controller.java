@@ -44,28 +44,39 @@ public class Controller implements ControllerModelInterface,
     }    
     
     ///// Metody ControllerViewInterface ////////
-	@Override
-	public void simulatorRefreshRequest( Drawer drawer)
-	{
-            model.drawObjects( drawer );
-	}
+    
+    @Override
+    public void refreshRobotView( Drawer drawer )
+    {
+        model.drawRobot( drawer );
+    }
+    
+    @Override
+    public void refreshSimulatorView( Drawer drawer)
+    {
+        model.drawObjects( drawer );
+    }
+    
+    @Override
+    public void startSimulation(  )
+    {
+        model.startThread();
         
-        @Override
-        public void startMoving()
-        {
-            model.startThread();
-        }
+    }
+    
+    @Override
+    public void pauseSimulation(  )
+    {
+        model.pauseThread();
+    }
+    
+    @Override
+    public void stopSimulation(  )
+    {
+        model.stopThread();
         
-        @Override
-        public void stopMoving()
-        {
-            model.stopThread();
-        }
+    }
     
     /////// Metody ControllerModelInterface /////////////////////
-    @Override
-	public void funn()
-	{
-		
-	}
+    
 }

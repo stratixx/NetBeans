@@ -31,13 +31,15 @@ public class LIDAR extends Czujnik {
     Obiekt robot;
     double time;
     private Point2D vectorOrginal;
+    private String name;
     
     public LIDAR( Obiekt newRobot )
     {
-        this.fotonSpeed = 300;
-        this.beamsNumber = 4;
-        this.pointsDensity = 3.0;
-        this.pointsLifeTime = 0.5;
+        name = "LIDAR";
+        this.fotonSpeed = 500;
+        this.beamsNumber = 6;
+        this.pointsDensity = 3.5;
+        this.pointsLifeTime = 4.5;
         points = new ArrayList<Point>() {
             @Override
             public boolean contains(Object o) {
@@ -68,7 +70,7 @@ public class LIDAR extends Czujnik {
         {
             beams.add( new SensorBeam( this, robot.getOffset(), MyMath.rotate(vectorOrginal, n), robot.getID()));    
         }
-            vectorOrginal = MyMath.rotate(vectorOrginal, 8);
+            vectorOrginal = MyMath.rotate(vectorOrginal, -8);
     }
     
     @Override
@@ -130,5 +132,11 @@ public class LIDAR extends Czujnik {
     public VetoableChangeListener getChangeListener()
     {
         return robot.getVetoableChangeSupport().getVetoableChangeListeners()[0];
+    }
+    
+    @Override
+    public String getName()
+    {
+        return name;
     }
 }

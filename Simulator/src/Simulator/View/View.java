@@ -1,17 +1,13 @@
 package Simulator.View;
 
+import Simulator.Tools.RefreshThread;
 import Simulator.Controller.ControllerViewInterface;
 import Simulator.Controller.ViewInterface;
-import Simulator.Tools.Drawer;
 import Simulator.View.MainView.MainView;
-import Simulator.View.RobotView.RobotView;
-import Simulator.View.SimulatorView.SimulatorView;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
 
@@ -22,104 +18,97 @@ public class View implements ViewInterface
     
     private final String resourcePath;
     
-    private RobotView robot;
+    private ViewController robot;
     private final String robotResource;
     
-    private SimulatorView simulator;
+    private ViewController simulator;
     private final String simulatorResource;
     
     private MainView mainView;
     private final String mainResource;
-        
+     
+    private RefreshThread viewRefreshThread;
+    
     public View()
     {
         resourcePath = "/Simulator/View";
         robotResource = resourcePath + "/RobotView/RobotView.fxml";
         simulatorResource = resourcePath + "/SimulatorView/SimulatorView.fxml";
         mainResource = resourcePath + "/MainView/MainView.fxml";
+        viewRefreshThread = new RefreshThread(30.0) {
+            @Override
+            public void threadProcedure( double deltaT ) {
+                Platform.runLater(() -> {
+                    refreshRobotViewRequest();
+                });
+                Platform.runLater(() -> {
+                    refreshSimulatorViewRequest();
+                });
+            }
+        };
+        viewRefreshThread.setName("ViewRefreshThread");
     }
     
-    /**
-     * Ustawienie referencji na kontroler
-     * @param controller referencja do obiektu kontrolera
-     */
     public void setController(ControllerViewInterface controller){
         this.controller = controller;        
     }
     
-    public void refreshLoop()
-    {        
-            Platform.runLater(() -> 
-            {
-                refreshLoop();
-            });
-            controller.simulatorRefreshRequest( new Drawer(simulator.getGC()) );
+    public ControllerViewInterface getController(){
+        return controller;        
     }
 
     @Override
     public void launch( Stage PrimaryStage ) throws IOException{ 
         
-        robot     = (RobotView)     ViewController.loadView(this, getClass().getResource(robotResource)    );
-        simulator = (SimulatorView) ViewController.loadView(this, getClass().getResource(simulatorResource));
+        robot     = ViewController.loadView(this, getClass().getResource(robotResource)    );
+        simulator = ViewController.loadView(this, getClass().getResource(simulatorResource));
         mainView  = (MainView)      ViewController.loadView(this, getClass().getResource(mainResource)     );
             
         mainView.addNodeAsNewTab( robot.getPane()    , robot.getViewName()    );
         mainView.addNodeAsNewTab( simulator.getPane(), simulator.getViewName()); 
         
-        controller.simulatorRefreshRequest( new Drawer(simulator.getGC()) );
+        
     
-        
-            Thread thread = new Thread(() -> {
-                int f=30;
-                int n=10;
-                controller.startMoving();
-                while( true )
-                {
-                    if( !mainView.enableButton.isSelected() )
-                        break;
-                    
-                    Platform.runLater(() -> {
-                        controller.simulatorRefreshRequest( new Drawer(simulator.getGC()) );
-                    });
-                    try {
-                        Thread.sleep(1000/f);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                };
-                
-                controller.stopMoving();
-                
-            });
-            thread.setDaemon(true);
-            thread.setName("ViewRefreshThreadHz");
-            
-        mainView.enableButton.setOnMouseClicked((event) -> 
-        {
-            //controller.simulatorRefreshRequest( new Drawer(simulator.getGC()) );
-            if( mainView.enableButton.isSelected() )
-                thread.start();
-            
-        });
-        
+        /*
         simulator.canvas.setOnMouseMoved((event) -> 
         {
             mainView.mouseLabel.setText(event.getX()+":"+event.getY());
             //controller.simulatorRefreshRequest( new Drawer(simulator.getGC()) );
-        });
+        });*/
+        
+        refreshRobotViewRequest();
+        refreshSimulatorViewRequest();
         
         PrimaryStage.setScene(new Scene(mainView.getContent()));
         PrimaryStage.show();
     }
     
-    public GraphicsContext getRobotGraphicsContext()
+    public void buttonStartAction( ActionEvent event )
     {
-        return robot.getGraphicsContext();
+        controller.startSimulation();        
+        viewRefreshThread.startThread();
     }
     
-    public GraphicsContext getSimulatorGraphicsContext()
+    public void buttonPauseAction( ActionEvent event )
     {
-        return simulator.getGraphicsContext();
+        controller.pauseSimulation();
+        viewRefreshThread.pauseThread();
+    }
+    
+    public void buttonStopAction( ActionEvent event )
+    {
+        controller.stopSimulation();
+        viewRefreshThread.stopThread();
+    }
+    
+    public void refreshRobotViewRequest()
+    {
+        controller.refreshRobotView( robot.getDrawer() );        
+    }
+    
+    public void refreshSimulatorViewRequest()
+    {
+        controller.refreshSimulatorView( simulator.getDrawer() );
     }
     
 }
