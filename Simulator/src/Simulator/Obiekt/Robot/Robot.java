@@ -12,6 +12,7 @@ import Simulator.Tools.Drawer;
 import Simulator.Tools.Figura.Kolo;
 import Simulator.Tools.Figura.Figura;
 import Simulator.Tools.Figura.Wielokat;
+import Simulator.Tools.MyMath;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
@@ -29,7 +30,7 @@ public class Robot extends Obiekt{
     public Robot( double x, double y ) 
     {        
         super( new Point2D(x, y), true, false, "Robot");
-        
+                
         sensor = new ArrayList<>();        
         
         
@@ -48,11 +49,11 @@ public class Robot extends Obiekt{
             add( new Point2D(x0,y0+height));
         }}));
 
-        element.add( new Kolo(0, -55, 10));        
-        element.add( new Kolo(-width/2, -30, 10));
-        element.add( new Kolo(-width/2, 30, 10));
-        element.add( new Kolo(width/2, -30, 10));
-        element.add( new Kolo(width/2, 30, 10));
+        element.add( new Kolo(0, -height/2-10/2, width/5));        
+        element.add( new Kolo(-width/2, -30, width/5));
+        element.add( new Kolo(-width/2, 30, width/5));
+        element.add( new Kolo(width/2, -30, width/5));
+        element.add( new Kolo(width/2, 30, width/5));
         
         super.setElementList(element);
     }
@@ -82,7 +83,7 @@ public class Robot extends Obiekt{
         if( !this.move( deltaT ))
         {
             this.setVelocity( this.getVelocity().multiply(-1.1) );
-            this.setRotationSpeed( -1.1*this.getRotationSpeed() );
+            this.setRotationSpeed( -1.25*this.getRotationSpeed() );
         }
         
         sensor.forEach((sensor) -> {

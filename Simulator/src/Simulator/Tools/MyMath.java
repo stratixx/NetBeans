@@ -34,4 +34,27 @@ public class MyMath {
         return new Point2D(x, y);
     }
     
+    /**
+     * Obliczenie kąta pomiędzy punktem A, a B  wierzchołkiem vertex
+     * kąt narasta przeciwnie do kierunku zegara
+     * zakres <0 ; 360) stopni
+     * @param a punkt początkowy
+     * @param vertex wierzchołek
+     * @param b punkt końcowy
+     * @return kąt pomiędzy A i B
+     */
+    public static double angle( Point2D a, Point2D vertex, Point2D b  )
+    {        
+        double result;
+        a = a.subtract(vertex);
+        b = b.subtract(vertex);
+        result = Math.atan2( b.getY(), b.getX() );
+        result -= Math.atan2( a.getY(), a.getX() );
+        result = Math.toDegrees(result);
+        if(result<0.0)
+            result += 360.0;
+        
+        return result;
+    }
+    
 }

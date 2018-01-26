@@ -166,7 +166,7 @@ public class Model implements ModelInterface {
                     if( !element.move( deltaT ))
                     {
                         element.setVelocity( element.getVelocity().multiply(-1) );
-                        element.setRotationSpeed( -element.getRotationSpeed() );
+                        element.setRotationSpeed( -1.2*element.getRotationSpeed() );
                     }
                 });            
     }
