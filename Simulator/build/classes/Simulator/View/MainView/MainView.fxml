@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Simulator.View.MainView.MainView">
+   <children>
+      <VBox prefWidth="100.0">
+         <children>
+            <Label prefHeight="25.0" prefWidth="100.0" text="start symulacji" />
+            <Button fx:id="buttonStart" defaultButton="true" mnemonicParsing="false" onAction="#buttonStartOnAction" prefHeight="25.0" prefWidth="100.0" text="START" />
+            <Label prefHeight="25.0" prefWidth="100.0" text="pauza symulacji" />
+            <Button fx:id="buttonPause" cancelButton="true" mnemonicParsing="false" onAction="#buttonPauseOnAction" prefWidth="100.0" text="PAUSE" />
+            <Label prefHeight="25.0" prefWidth="100.0" text="stop symulacji" />
+            <Button fx:id="buttonStop" disable="true" mnemonicParsing="false" onAction="#buttonStopOnAction" prefWidth="100.0" text="STOP" />
+            <Label fx:id="labelMousePosition" prefHeight="25.0" prefWidth="100.0" text="xxx.x:xxx.x" />
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </padding>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </VBox>
+      <Pane fx:id="pane" onMouseMoved="#paneOnMouseMoved">
+         <children>
+            <TabPane fx:id="tabPane" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="820.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="TabStart" text="Start">
+                  <content>
+                    <AnchorPane fx:id="startView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="820.0">
+                           <children>
+                              <Text layoutX="230.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello World!!" wrappingWidth="150.0" />
+                              <Text layoutX="230.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="I'm a fuckin robot simulator" wrappingWidth="150.0" />
+                              <Text layoutX="230.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="I like to bounce my balls" wrappingWidth="150.0" />
+                           </children></AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children></Pane>
+   </children>
+</HBox>

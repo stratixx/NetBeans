@@ -156,7 +156,7 @@ public class Model implements ModelInterface {
                     robot.setVelocity( robot.getVelocity().multiply(-1) );
                     robot.setRotationSpeed( -robot.getRotationSpeed() );
                 }
-                robot.getSensor("LIDAR").scan();
+                //robot.getSensor("LIDAR").scan();
                                 
                 przeszkoda.forEach((element) -> 
                 {
@@ -186,7 +186,7 @@ public class Model implements ModelInterface {
         drawer.getGC().setFill(Color.WHITESMOKE);
         drawer.getGC().fillRect(0, 0, 800, 600); 
         robot.draw(drawer);
-        robot.getSensor("LIDAR").draw(drawer);
+        //robot.getSensor("LIDAR").draw(drawer);
     }
     
 }
