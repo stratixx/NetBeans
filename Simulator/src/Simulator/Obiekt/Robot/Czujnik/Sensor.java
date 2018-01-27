@@ -13,15 +13,12 @@ import Simulator.Tools.Drawer;
  */
 abstract public class Sensor {
     
-    abstract public void scan();
+    abstract public void startMeasurement();
     
     /**
      * symulacja jednej chwili czasu
      */
-    public void tick( double deltaT )
-    {
-        
-    }
+    abstract public void tick( long currTime );
     
     public void draw( Drawer drawer )
     {

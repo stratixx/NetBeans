@@ -13,7 +13,7 @@ abstract public class RefreshThread extends Thread {
     
     final private Controls controls;
     private Boolean started;
-    private double frequency;
+    private long frequency;
     
     protected class Controls
     {
@@ -41,11 +41,31 @@ abstract public class RefreshThread extends Thread {
             //pause.notifyAll();
             return pause;
         }
+        
+        public void setRun( Boolean newRun )
+        {
+            runProcedure("set", newRun);
+        }
+        
+        public Boolean isRun()
+        {
+            return runProcedure("get", true);
+        }
+        
+        public void setPaused( Boolean newPause )
+        {
+            pauseProcedure("set", newPause);
+        }
+        
+        public Boolean isPaused()
+        {
+            return pauseProcedure("get", true);
+        }
     }
     
-    abstract public void threadProcedure( double deltaT );
+    abstract public void threadProcedure( long currTime );
     
-    public RefreshThread( double newFrequency)
+    public RefreshThread( long newFrequency)
     {
         frequency = newFrequency;
         controls = new Controls();
@@ -57,24 +77,24 @@ abstract public class RefreshThread extends Thread {
     @Override
     public void run()
     {
-        long startTime;
+        long calculationTime = 0;
+        long currTime;
         //System.out.println("Simulator.View.RefreshThread.run() runned");
         try
         {    
             //System.out.println("Simulator.View.RefreshThread.run() try start");
-            while( controls.runProcedure("get", Boolean.TRUE)==true )
+            while( controls.isRun() )
             {
                 //System.out.println("Simulator.View.RefreshThread.run() while loop");
-                while( controls.pauseProcedure("get", Boolean.TRUE)==true )
-                {
-                    //System.out.println("Simulator.View.RefreshThread.run() pause wait start");
-                    //controls.pause.wait();
-                    //System.out.println("Simulator.View.RefreshThread.run() pause wait end");
-                };
-                //startTime = System.currentTimeMillis();;
-                threadProcedure(1/frequency);
+                while( controls.isPaused() )
+                    Thread.sleep(10);
+                
+                currTime = System.currentTimeMillis();
+                threadProcedure(currTime);
+                calculationTime = System.currentTimeMillis() - currTime;
                 //System.out.println("RefreshThread.run() name: "+this.getName()+" time: "+(System.currentTimeMillis()-startTime));
-                Thread.sleep((long)(1000.0/frequency));
+                if( ((1000/frequency)-calculationTime)>0 )                
+                    Thread.sleep((1000/frequency)-calculationTime);
             } 
             //System.out.println("Simulator.View.RefreshThread.run() try end");
         }
@@ -83,7 +103,7 @@ abstract public class RefreshThread extends Thread {
             System.out.println("Simulator.View.ViewRefreshThread.run() exception");
             e.printStackTrace();
         }
-        System.out.println("Simulator.View.ViewRefreshThread.run() end");
+        System.out.println("Simulator.View.ViewRefreshThread.run() "+this.getName()+": end");
     }
     
         
@@ -94,13 +114,13 @@ abstract public class RefreshThread extends Thread {
         return started;
     }
     
+    
     public void startThread()
     {
-        if( startedProcedure("get", true)==false )
+        if( isStarted()==false )
         {
-            startedProcedure("set", true);
-            controls.runProcedure("set", true);
-            controls.pauseProcedure("set", false);
+            setStarted(true);
+            controls.setRun(true);
             this.start();
         }
         else if( controls.pauseProcedure("get", true)==true )
@@ -112,13 +132,13 @@ abstract public class RefreshThread extends Thread {
     
     public void pauseThread()
     {
-        controls.pauseProcedure("set", true);
+        controls.setPaused(true);
     }
     
     
     public void stopThread()
     {
-        controls.runProcedure("set", false);
+        controls.setRun(false);
     }
     
     /////////////////////////// Settery i gettery ///////////////////////////
@@ -126,5 +146,15 @@ abstract public class RefreshThread extends Thread {
     public Controls getControls()
     {
         return this.controls;
+    }
+        
+    public Boolean isStarted()
+    {
+        return startedProcedure("get", true);
+    }
+
+    private void setStarted( Boolean newStarted )
+    {
+        startedProcedure("set", newStarted);
     }
 }

@@ -6,11 +6,9 @@
 package Simulator.Obiekt.Robot.Czujnik;
 
 import Simulator.Obiekt.Obiekt;
-import Simulator.Obiekt.SensorBeam.SensorBeam;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.MyMath;
 import Simulator.Tools.Point;
-import java.beans.VetoableChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
@@ -22,31 +20,76 @@ import javafx.scene.paint.Color;
  */
 public class LIDAR extends Sensor {
     
-    List<Point> points;
-    final private double pointsLifeTime;
-    final private double pointsDensity;
-    final private int beamsNumber;
-    final private double fotonSpeed;
-    List<SensorBeam> beams;
-    Obiekt robot;
-    double time;
-    private Point2D vectorOrginal;
     private String name;
+    final private Obiekt robot;
     
+    final private List<Point> distances; // Punkty wyznaczone
+    final private long measurementLifeTime; // Czas życia punktu [ms]
+    final private double measurementMaxDensity; // max gęstość punktów
+    final private int beamsNumber; // ilość jednocześnie wyznaczanych punktów
+    
+    private long prevTime;
+    
+    private class Measurement
+    { 
+        private long startTime; // Czas rozpoczęcia pomiaru [ms]
+        private long delay; // Czas trwania pomiaru [ms]
+        private Boolean isDone; // czy pomiar zakończono
+        private Boolean isReaded; // czy pomiar odczytano
+        private List<Point> distances;
+        
+        public Measurement( long startTime )
+        {
+            this.startTime = startTime;
+            delay = 100;
+            isDone = false;
+            isReaded = false;
+            distances = new ArrayList<>();
+        }
+        
+        public void tick( long currTime )
+        {
+            if( (currTime-startTime)>=delay )
+                isDone = true;
+        }
+        
+        public Boolean isDone()
+        {
+            return isDone;
+        }
+        
+        public Boolean isReaded()
+        {
+            return isReaded;
+        }
+        
+        public List<Point> getMeasurements()
+        {
+            isReaded = true;
+            return distances;
+        }
+        
+    }
+    
+    private Measurement currMeasurement;
+        
     public LIDAR( Obiekt newRobot )
     {
         name = "LIDAR";
-        this.fotonSpeed = 500;
-        this.beamsNumber = 6;
-        this.pointsDensity = 3.5;
-        this.pointsLifeTime = 4.5;
-        points = new ArrayList<Point>() {
+        robot = newRobot;        
+        beamsNumber = 6;
+        measurementMaxDensity = 3.5;
+        measurementLifeTime = 4500; 
+        prevTime = 0;
+        currMeasurement = null;
+               
+        distances = new ArrayList<Point>() {
             @Override
             public boolean contains(Object o) {
                 Point p = (Point)o;
                 List<Boolean> list = new ArrayList<>();
                 forEach((point) -> {
-                    if( point.subtract(p).magnitude()<pointsDensity )
+                    if( point.subtract(p).magnitude()<measurementMaxDensity )
                         list.add(Boolean.TRUE);
                 });
                 if(list.size()>0)
@@ -55,63 +98,42 @@ public class LIDAR extends Sensor {
                     return false;
             }
         };
-        
-        
-        beams = new ArrayList<>();
-        robot = newRobot;
-        time = 0.0;
-        vectorOrginal = new Point2D(fotonSpeed, 0);
     }
     
     @Override
-    public void scan() {
+    public void startMeasurement() {
         //System.out.println("Simulator.Obiekt.Robot.Sensor.LIDAR.scan()");
+        if( currMeasurement==null || currMeasurement.isDone()&&currMeasurement.isReaded())
+            currMeasurement = new Measurement(prevTime);
+        
         for( int n=0; n<360; n=n+(360/beamsNumber))
         {
-            beams.add( new SensorBeam( this, robot.getOffset(), MyMath.rotate(vectorOrginal, n), robot.getID()));    
+            //beams.add( new SensorBeam( this, robot.getOffset(), MyMath.rotate(vectorOrginal, n), robot.getID()));    
         }
-            vectorOrginal = MyMath.rotate(vectorOrginal, -8);
+            //vectorOrginal = MyMath.rotate(vectorOrginal, -8);
+            
+        
+        Point p = new Point(new Point2D(90, 90), prevTime );
+        if( !distances.contains( p ) )
+            distances.add( p );
     }
     
     @Override
-    public void tick( double deltaT )
-    {
-        time+=deltaT;
+    public void tick( long currTime )
+    {     
+        long deltaT = 0;
         
-        beams.forEach((beam) -> {
-            beam.tick( deltaT );
-        });        
+        if( prevTime!=0 )            
+            deltaT = currTime - prevTime; 
+        prevTime = currTime;
         
-        beams.removeIf((beam) -> {
-            if( ! beam.isActive() )
-            {
-                Point p = new Point(beam.getEndPosition(), time );
-                if( !points.contains( p ) )
-                    points.add( p );
-                //else
-                    //System.out.println("Simulator.Obiekt.Robot.Sensor.LIDAR.tick() contains: "+points.size());
-            }
-                //System.out.println( "DISTANCE: " + beam.getOffset().distance(beam.getStartPosition()) + "; " );
-            return !beam.isActive();
-        });
+        if( currMeasurement!=null )
+        {
+            currMeasurement.tick(currTime);  
+        }
         
-        points.removeIf((point) -> {
-            if( (point.getCreationTime()+pointsLifeTime)<time )
-                {
-                    //System.out.println("Simulator.Obiekt.Robot.Sensor.LIDAR.tick() delete");
-                    return true;
-                }
-            return false;
-        });
-    }
-    
-    @Override
-    public void draw( Drawer drawer)
-    {
-        List<SensorBeam> tmp = new ArrayList<>(beams);
-        drawMeasurement(drawer);
-        tmp.forEach((beam) -> {
-            beam.draw( drawer );
+        distances.removeIf((point) -> {
+            return ( (point.getCreationTime()+measurementLifeTime)<currTime );
         });
     }
     
@@ -121,17 +143,12 @@ public class LIDAR extends Sensor {
         Point2D offset = drawer.getOffset();
         drawer.setoffset(new Point2D(0, 0));
         drawer.setFill(Color.GREY);
-        List<Point2D> tmp = new ArrayList<>(points);
+        List<Point2D> tmp = new ArrayList<>(distances);
         tmp.forEach((point) -> {
-            drawer.fillOval(point.getX()-pointsDensity/2, point.getY()-pointsDensity/2, pointsDensity*2/2, pointsDensity*2/2);
+            drawer.fillOval(point.getX()-measurementMaxDensity/2, point.getY()-measurementMaxDensity/2, measurementMaxDensity*2/2, measurementMaxDensity*2/2);
             
         });
         drawer.setoffset(offset);
-    }
-    
-    public VetoableChangeListener getChangeListener()
-    {
-        return robot.getVetoableChangeSupport().getVetoableChangeListeners()[0];
     }
     
     @Override

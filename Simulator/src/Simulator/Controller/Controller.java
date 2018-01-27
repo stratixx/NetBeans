@@ -4,8 +4,6 @@ package Simulator.Controller;
 import Simulator.Model.*;
 import Simulator.Tools.Drawer;
 import Simulator.View.*;
-import javafx.scene.canvas.GraphicsContext;
-import sun.font.GraphicComponent;
 
 /**
  * Kontroler zapewniający komunikację pomiędzy widokiem a modelem aplikacji

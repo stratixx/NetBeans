@@ -71,7 +71,7 @@ public class Model implements ModelInterface {
             }
         };
         
-        robot = new Robot( 100, 80 );
+        robot = new Robot( 100, 80, 1 );
         robot.setTheta(90);
         robot.setVelocity(new Point2D(100, 0));
         robot.setRotationSpeed(1);
@@ -112,10 +112,10 @@ public class Model implements ModelInterface {
             System.out.println( element.toString() );
         });
         
-        refreshThread = new RefreshThread(100.0) {
+        refreshThread = new RefreshThread(100) {
             @Override
-            public void threadProcedure( double deltaT) {
-                moveObjects( deltaT );
+            public void threadProcedure( long currTime) {
+                moveObjects( currTime );
             }
         };
         refreshThread.setName("ModelRefreshThread");
@@ -136,39 +136,45 @@ public class Model implements ModelInterface {
     public void startThread()
     {        
         refreshThread.startThread();
+        robot.startProgram();
     }
     
     @Override
     public void stopThread()
     {
         refreshThread.stopThread();
+        robot.stopProgram();
     }
     
     @Override
     public void pauseThread()
     {
         refreshThread.pauseThread();
+        robot.pauseProgram();
     }
-    
-    public void moveObjects( double deltaT )
-    {            
-            
+    private long prevTime = 0;
+    public void moveObjects( long currTime )
+    {                      
+                robot.tick(currTime);
                 
-                robot.tick(deltaT);
-                                
                 przeszkoda.forEach((element) -> 
                 {
-                    if(element.getVelocity().magnitude()<=0.001 && element.getRotationSpeed()<=1) 
+                    long deltaT = 0;        
+                    if( prevTime!=0 )            
+                        deltaT = currTime - prevTime;  
+                    if(element.getVelocity().magnitude()<=0.001 && element.getRotationSpeed()<=0.1) 
                     {
                         //element.setVelocity(new Point2D(0.25*20, 0*0.25*-1));
                         element.setRotationSpeed(element.getID()*3);
                     }
-                    if( !element.move( deltaT ))
+                    if( !element.move( deltaT/1000.0 ))
                     {
                         element.setVelocity( element.getVelocity().multiply(-1) );
                         element.setRotationSpeed( -1.2*element.getRotationSpeed() );
                     }
-                });            
+                }); 
+                
+        prevTime = currTime;     
     }
     
     /**
