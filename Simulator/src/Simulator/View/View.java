@@ -35,7 +35,11 @@ public class View implements ViewInterface
         robotResource = resourcePath + "/RobotView/RobotView.fxml";
         simulatorResource = resourcePath + "/SimulatorView/SimulatorView.fxml";
         mainResource = resourcePath + "/MainView/MainView.fxml";
-        viewRefreshThread = new RefreshThread(30) {
+        viewRefreshThread = new RefreshThread(25) 
+        {
+            @Override
+            public void threadInitProcedure(long currTime) {    }
+            
             @Override
             public void threadProcedure( long currTime ) {
                 Platform.runLater(() -> {
@@ -45,6 +49,9 @@ public class View implements ViewInterface
                     refreshSimulatorViewRequest();
                 });
             }
+
+            @Override
+            public void threadEndProcedure(long currTime) { }
         };
         viewRefreshThread.setName("ViewRefreshThread");
     }

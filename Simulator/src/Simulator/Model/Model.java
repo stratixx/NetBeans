@@ -7,7 +7,8 @@ import Simulator.Obiekt.Latarnia.Latarnia;
 import Simulator.Obiekt.Obiekt;
 import Simulator.Obiekt.Przeszkoda.*;
 import Simulator.Obiekt.Robot.Czujnik.LIDAR;
-import Simulator.Obiekt.Robot.Robot;
+import Simulator.Obiekt.Robot.RobotAbstract;
+import Simulator.Obiekt.Robot.RobotSimulated;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.RefreshThread;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Model implements ModelInterface {
     List<Obiekt> obiekt;
     
     // robot porusza się po trasie ograniczonej barierą
-    private Robot robot;    
+    private RobotAbstract robot;    
     // przeszkody na trasie robota
     private List<Przeszkoda> przeszkoda;
     // bariera ogranicza pole ruchu robota
@@ -71,11 +72,8 @@ public class Model implements ModelInterface {
             }
         };
         
-        robot = new Robot( 100, 80, 1 );
+        robot = new RobotSimulated(100, 80, 10 );
         robot.setTheta(90);
-        robot.setVelocity(new Point2D(100, 0));
-        robot.setRotationSpeed(1);
-        robot.addSensor( new LIDAR( robot ) );
         
         przeszkoda = new ArrayList<>();
         przeszkoda.add( new FourDots(new Point2D(400, 420), 60, 50, 10));
@@ -112,11 +110,18 @@ public class Model implements ModelInterface {
             System.out.println( element.toString() );
         });
         
-        refreshThread = new RefreshThread(100) {
+        refreshThread = new RefreshThread(100) 
+        {
+            @Override
+            public void threadInitProcedure(long currTime) { }
+            
             @Override
             public void threadProcedure( long currTime) {
                 moveObjects( currTime );
             }
+
+            @Override
+            public void threadEndProcedure(long currTime) { }
         };
         refreshThread.setName("ModelRefreshThread");
     }
@@ -162,6 +167,7 @@ public class Model implements ModelInterface {
                     long deltaT = 0;        
                     if( prevTime!=0 )            
                         deltaT = currTime - prevTime;  
+                    
                     if(element.getVelocity().magnitude()<=0.001 && element.getRotationSpeed()<=0.1) 
                     {
                         //element.setVelocity(new Point2D(0.25*20, 0*0.25*-1));

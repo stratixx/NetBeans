@@ -6,6 +6,7 @@
 package Simulator.Obiekt.Robot;
 
 import Simulator.Obiekt.Obiekt;
+import Simulator.Obiekt.Robot.Czujnik.LIDAR;
 import Simulator.Obiekt.Robot.Czujnik.Sensor;
 import Simulator.Tools.Figura.Kolo;
 import Simulator.Tools.Figura.Figura;
@@ -19,26 +20,41 @@ import javafx.geometry.Point2D;
  *
  * @author Skrzatt
  */
-public class Robot extends Obiekt{
+abstract public class RobotAbstract extends Obiekt{
     
     //private List<Przeszkoda> elementCalc; // lista przeliczonych punktów robota
-    private List<Sensor> sensor;
+    private final List<Sensor> sensor;
     private long prevTime;
-    private RefreshThread robotThread;
+    private final RefreshThread robotThread;
     
-    public Robot( double x, double y, long programRate ) 
+    public RobotAbstract( double x, double y, long programRate ) 
     {        
-        super( new Point2D(x, y), true, false, "Robot");
+        super( new Point2D(x, y), true, false, "RobotAbstract");
                 
         sensor = new ArrayList<>();        
         prevTime = 0;
         robotThread = new RefreshThread(programRate) {
             @Override
+            public void threadInitProcedure(long currTime) {
+                robotInitProcedure( currTime );
+            }
+            
+            @Override
             public void threadProcedure(long currTime) {
-                robotProcedure(currTime);
+                robotProcedure( currTime );
+            }
+
+            @Override
+            public void threadEndProcedure(long currTime) {
+                robotEndProcedure( currTime );
             }
         };
         robotThread.setName("RobotProgramThread");
+        
+        super.setVelocity(new Point2D(100, 20));
+        super.setRotationSpeed(30);
+        addSensor( new LIDAR( this ) );
+        
         
         List<Figura> element = super.getElementList();        
         double x0 = -25;
@@ -86,16 +102,16 @@ public class Robot extends Obiekt{
     
     public void tick( long currTime )
     {        
-        long deltaT = 0;
+        double deltaT = 0;
         
         if( prevTime!=0 )            
             deltaT = currTime - prevTime; 
         prevTime = currTime;
         
-        if( !this.move( deltaT/1000 ))
+        if( !this.move( deltaT/1000.0 ))
         {
-            this.setVelocity( this.getVelocity().multiply(-1.1) );
-            this.setRotationSpeed( -1.25*this.getRotationSpeed() );
+            this.setVelocity( this.getVelocity().multiply(-1.0) );
+            this.setRotationSpeed( -1.0*this.getRotationSpeed() );
         }
         
         sensor.forEach((sensor) -> {
@@ -118,15 +134,8 @@ public class Robot extends Obiekt{
         robotThread.stopThread();
     }
     
-    private void robotProcedure(long currTime)
-    {/*
-        Sensor lidar = getSensor("LIDAR");
-        
-            if( lidar.currMeasurement.isDone() && !currMeasurement.isReaded() )
-            {
-                currMeasurement.getMeasurements();
-            }
-        lidar.startMeasurement();*/
-    }
+    abstract public void robotInitProcedure(long currTime);    
+    abstract public void robotProcedure(long currTime);
+    abstract public void robotEndProcedure(long currTime);
     
 }

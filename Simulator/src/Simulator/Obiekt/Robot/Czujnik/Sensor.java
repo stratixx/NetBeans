@@ -6,6 +6,8 @@
 package Simulator.Obiekt.Robot.Czujnik;
 
 import Simulator.Tools.Drawer;
+import Simulator.Tools.Point;
+import java.util.List;
 
 /**
  *
@@ -13,7 +15,14 @@ import Simulator.Tools.Drawer;
  */
 abstract public class Sensor {
     
-    abstract public void startMeasurement();
+    
+    abstract public void start();
+    abstract public List<Point> read();
+    abstract public Boolean isStarted();
+    abstract public Boolean isDone();
+    abstract public Boolean isReaded();
+    
+    
     
     /**
      * symulacja jednej chwili czasu

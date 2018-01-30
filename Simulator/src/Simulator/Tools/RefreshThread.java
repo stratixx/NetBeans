@@ -13,7 +13,7 @@ abstract public class RefreshThread extends Thread {
     
     final private Controls controls;
     private Boolean started;
-    private long frequency;
+    private final long frequency;
     
     protected class Controls
     {
@@ -63,7 +63,9 @@ abstract public class RefreshThread extends Thread {
         }
     }
     
+    abstract public void threadInitProcedure( long currTime );
     abstract public void threadProcedure( long currTime );
+    abstract public void threadEndProcedure( long currTime );
     
     public RefreshThread( long newFrequency)
     {
@@ -77,26 +79,36 @@ abstract public class RefreshThread extends Thread {
     @Override
     public void run()
     {
-        long calculationTime = 0;
+        long startTime = System.currentTimeMillis();
+        long tmpTime = 0;
         long currTime;
+        long pauseTimeOffset = 0;
         //System.out.println("Simulator.View.RefreshThread.run() runned");
         try
         {    
+            threadInitProcedure(startTime);
             //System.out.println("Simulator.View.RefreshThread.run() try start");
             while( controls.isRun() )
             {
                 //System.out.println("Simulator.View.RefreshThread.run() while loop");
-                while( controls.isPaused() )
-                    Thread.sleep(10);
+                if( controls.isPaused() )
+                {
+                    tmpTime = System.currentTimeMillis();
+                    while( controls.isPaused() )
+                        Thread.sleep(10);
+                    pauseTimeOffset += System.currentTimeMillis() - tmpTime;
+                }
                 
                 currTime = System.currentTimeMillis();
-                threadProcedure(currTime);
-                calculationTime = System.currentTimeMillis() - currTime;
+                threadProcedure(currTime - startTime - pauseTimeOffset);
+                tmpTime += 3*(System.currentTimeMillis() - currTime);
+                tmpTime /= 4;
                 //System.out.println("RefreshThread.run() name: "+this.getName()+" time: "+(System.currentTimeMillis()-startTime));
-                if( ((1000/frequency)-calculationTime)>0 )                
-                    Thread.sleep((1000/frequency)-calculationTime);
+                if( ((1000/frequency)-tmpTime)>0 )                
+                    Thread.sleep((1000/frequency)-tmpTime);
             } 
             //System.out.println("Simulator.View.RefreshThread.run() try end");
+            threadEndProcedure(System.currentTimeMillis() - pauseTimeOffset);
         }
         catch( Exception e )
         {
@@ -123,10 +135,7 @@ abstract public class RefreshThread extends Thread {
             controls.setRun(true);
             this.start();
         }
-        else if( controls.pauseProcedure("get", true)==true )
-        {
-            controls.pauseProcedure("set", false);
-        }
+        controls.setPaused(false);       
     }
     
     
