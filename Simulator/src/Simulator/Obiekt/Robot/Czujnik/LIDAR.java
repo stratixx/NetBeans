@@ -7,12 +7,10 @@ package Simulator.Obiekt.Robot.Czujnik;
 
 import Simulator.Obiekt.Obiekt;
 import Simulator.Tools.Drawer;
-import Simulator.Tools.MyMath;
 import Simulator.Tools.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -36,13 +34,12 @@ public class LIDAR extends Sensor {
     private class Measurement
     { 
         private long startTime; // Czas rozpoczęcia pomiaru [ms]
-        private List<Point> distances; // nowe wyznaczone odległości
+        private List<Point> newDistances; // nowe wyznaczone odległości
         
         public Measurement( long startTime )
         {
             this.startTime = startTime;
-            this.distances = new ArrayList<>();
-            this.distances.add(new Point(Point2D.ZERO, startTime));
+            newDistances = new ArrayList<>();
             setDone(false);
             setReaded(false);
         }
@@ -52,6 +49,7 @@ public class LIDAR extends Sensor {
             if( (currTime-this.startTime)>=delay )
             {
                 
+                newDistances.add(new Point(new Point2D(startTime/10, 0), startTime));
                 setDone(true);
             }
         }
@@ -59,7 +57,7 @@ public class LIDAR extends Sensor {
         public List<Point> getMeasurements()
         {
             setReaded(true);
-            return this.distances;
+            return this.newDistances;
         }
         
     }
@@ -72,7 +70,7 @@ public class LIDAR extends Sensor {
         robot = newRobot;        
         beamsNumber = 6;
         measurementMaxDensity = 3.5;
-        measurementLifeTime = 1600; 
+        measurementLifeTime = 1000; 
         prevTime = 0;
         delay = 500;
         done = false;
@@ -117,16 +115,19 @@ public class LIDAR extends Sensor {
     @Override
     public List<Point> read()
     {
+        synchronized( distances )
+        {
         synchronized( currMeasurement )
         {
             List<Point> list = currMeasurement.getMeasurements();
             list.forEach((element) -> {
-                //if( !distances.contains(element))
+                if( !distances.contains(element))
                     distances.add(element);
             });
             currMeasurement = null;
+            return list;
         }
-        return distances;
+        }
     }
     
     
@@ -146,9 +147,12 @@ public class LIDAR extends Sensor {
                 currMeasurement.tick(currTime);            
             }        
         
-        distances.removeIf((point) -> {
-            return ( (point.getCreationTime()+measurementLifeTime)<currTime );
-        });
+        synchronized( distances )
+        {
+            distances.removeIf((point) -> {
+                return ( (point.getCreationTime()+measurementLifeTime)<currTime );
+            });
+        }
     }
     
     @Override

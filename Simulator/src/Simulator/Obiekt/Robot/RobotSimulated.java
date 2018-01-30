@@ -13,15 +13,11 @@ import Simulator.Obiekt.Robot.Czujnik.Sensor;
  */
 public class RobotSimulated extends RobotAbstract{
 
-    private String name;
-    
     private Sensor lidar;
     
     public RobotSimulated(double x, double y, long programRate) {
-        super(x, y, programRate);        
-        super.setName("RobotSimulated");
-        
-        lidar = super.getSensor("LIDAR");
+        super(x, y, programRate);           
+        super.setName("RobotSimulated");        
     }
     
     
@@ -29,6 +25,7 @@ public class RobotSimulated extends RobotAbstract{
     @Override
     public void robotInitProcedure(long currTime) 
     {
+        lidar = super.getSensor("LIDAR");
         lidar.start();
     }
     
