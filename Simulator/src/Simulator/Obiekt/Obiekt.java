@@ -5,10 +5,12 @@
  */
 package Simulator.Obiekt;
 
+import Simulator.Model.Model;
 import Simulator.Tools.Axis;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.Figura.Figura;
 import Simulator.Tools.Figura.Prostokat;
+import Simulator.Tools.Promien;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import java.beans.VetoableChangeSupport;
@@ -23,6 +25,7 @@ import javafx.scene.paint.Color;
  */
  public class Obiekt{
     
+    Model model;
     VetoableChangeSupport changeSupport; // rozgłaszanie zmiany pozycji obiektu
              
     private Point2D offset; // pozycja obiektu i jego oś obrotu
@@ -35,7 +38,7 @@ import javafx.scene.paint.Color;
     private Point2D velocity; // wektor prędkości obiektu
     private double rotationSpeed; // prędkość obrotowa/kątowa
     
-    private List<Figura> element; // lista punktów robota
+    private List<Figura> element; // lista figur obiektu
     
     private int ID;    
     private String name;
@@ -146,15 +149,15 @@ import javafx.scene.paint.Color;
         List<Figura> tmpList = new ArrayList<>(this.getElementList());
         double x = point.getX();
         double y = point.getY();
-        double maxX = Collision.getMaxX(tmpList) ;
-        double minX = Collision.getMinX(tmpList) ;
-        double maxY = Collision.getMaxY(tmpList) ;
-        double minY = Collision.getMinY(tmpList) ;
         
         drawer.setoffset(point);
         
         if( debugObwiedniaObiektu)
         {
+            double maxX = Collision.getMaxX(tmpList) ;
+            double minX = Collision.getMinX(tmpList) ;
+            double maxY = Collision.getMaxY(tmpList) ;
+            double minY = Collision.getMinY(tmpList) ;
             Prostokat obwiednia =  new Prostokat(minX, minY, maxX-minX, maxY-minY );
             obwiednia.setVisible(false);
             obwiednia.setTransparent(false);
@@ -296,5 +299,15 @@ import javafx.scene.paint.Color;
     public String getName()
     {
         return name;
+    }
+    
+    public void setModel( Model newModel )
+    {
+        model = newModel;
+    }
+    
+    public Model getModel()
+    {
+        return model;
     }
 }

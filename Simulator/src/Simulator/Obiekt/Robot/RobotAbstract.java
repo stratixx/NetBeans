@@ -8,9 +8,11 @@ package Simulator.Obiekt.Robot;
 import Simulator.Obiekt.Obiekt;
 import Simulator.Obiekt.Robot.Czujnik.LIDAR;
 import Simulator.Obiekt.Robot.Czujnik.Sensor;
+import Simulator.Tools.Drawer;
 import Simulator.Tools.Figura.Kolo;
 import Simulator.Tools.Figura.Figura;
 import Simulator.Tools.Figura.Wielokat;
+import Simulator.Tools.Promien;
 import Simulator.Tools.RefreshThread;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +53,8 @@ abstract public class RobotAbstract extends Obiekt{
         };
         robotThread.setName("RobotProgramThread");
         
-        super.setVelocity(new Point2D(100, 20));
-        super.setRotationSpeed(30);
+        super.setVelocity(new Point2D(90*0.5, 60*0.5));
+        super.setRotationSpeed(0);
         addSensor( new LIDAR( this ) );
         
         
@@ -78,6 +80,16 @@ abstract public class RobotAbstract extends Obiekt{
         element.add( new Kolo(width/2, 30, width/5));
         
         super.setElementList(element);
+    }
+    
+    @Override
+    public void draw( Drawer drawer )
+    {
+        super.draw(drawer);
+        
+        sensor.forEach((element) -> {
+            element.draw(drawer);
+        });
     }
     
     public Sensor getSensor(String sensorName)

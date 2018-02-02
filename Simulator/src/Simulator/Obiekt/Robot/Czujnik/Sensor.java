@@ -26,6 +26,7 @@ abstract public class Sensor {
     
     /**
      * symulacja jednej chwili czasu
+     * @param currTime
      */
     abstract public void tick( long currTime );
     

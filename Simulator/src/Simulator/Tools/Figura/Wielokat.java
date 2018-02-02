@@ -9,6 +9,7 @@ import Simulator.Tools.Axis;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.MyMath;
 import Simulator.Tools.Projection;
+import Simulator.Tools.Promien;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -185,6 +186,125 @@ public class Wielokat extends Figura {
         });
 
         return projection;
+    }
+    
+    @Override
+    public void checkCross( List<Promien> promien, Point2D figuraOffset )
+    {
+        Point2D prevPoint = point.get(point.size()-1).add(figuraOffset);
+        
+        for (Point2D _point : point) {
+            _point = _point.add(figuraOffset);
+            double xB = _point.getX();
+            double yB = _point.getY();
+            double xA = prevPoint.getX();
+            double yA = prevPoint.getY();
+            double dyBA = yB-yA;
+            double dxBA = xB-xA;
+            
+            promien.forEach((_promien) -> {
+            double xD = _promien.getDirection().getX();
+            double yD = _promien.getDirection().getY();
+            double xS = _promien.getStart().getX();
+            double yS = _promien.getStart().getY();
+            double dyDS = yD-yS;
+            double dxDS = xD-xS;
+                
+            double A1, B1, C1;
+            double A2, B2, C2;
+            
+            double x;
+            double y;
+            
+            if( Math.abs(dyBA)<Math.abs(dxBA) )
+            {
+                A1 = -dyBA/dxBA;
+                B1 = 1.0;
+                C1 = dyBA/dxBA*xB-yB;
+                
+                //if( !Double.isFinite(A1))
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() error A1: "+dyBA+"/"+dxBA);
+                //if( !Double.isFinite(B1))
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() error B1: "+B1);
+                //if( !Double.isFinite(C1))
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() error C1: "+dyBA+"/"+dxBA+"*"+xB+"-"+yB);
+                
+                if( Math.abs(dyDS)<Math.abs(dxDS) ) // wariant 2-4
+                {
+                    A2 = -dyDS/dxDS;
+                    B2 = 1.0;
+                    C2 = dyDS/dxDS*xD-yD;
+                    x = (C1-C2)/(A2-A1);
+                    y = -C1-A1*x;
+                //if( Double.isNaN(x) || Double.isNaN(y) )  
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() Not a Number 2-4 "+" A1: "+A1+" B1: "+B1+" C1: "+C1+" A2: "+A2+" B2: "+B2+" C2: "+C2);
+                   /* 
+                // WARIANT 2-4
+                    x = -yB+yD+dyBA*xB/dxBA-dyDS*xD/dxDS;
+                    x /= dyBA/dxBA - dyDS/dxDS;
+
+                    // wyznaczone z x oraz z równania 2
+                    y = yD -dyDS*xD/dxDS + dyDS*x/dxDS;            
+                     */   
+                }
+                else // wariant 1-4
+                {
+                    A2 = 1.0;
+                    B2 = -dxDS/dyDS;
+                    C2 = dxDS/dyDS*yD-xD;
+                    y = -(C1-A1*C2)/(1-A1*B2);
+                    x = -C2-B2*y;  
+                //if( Double.isNaN(x) || Double.isNaN(y) )  
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() Not a Number 1-4 "+" A1: "+A1+" B1: "+B1+" C1: "+C1+" A2: "+A2+" B2: "+B2+" C2: "+C2);                      
+                }
+            }
+            else
+            {
+                A1 = 1.0;
+                B1 = -dxBA/dyBA;
+                C1 = dxBA/dyBA*yB-xB;
+                
+                //if( !Double.isFinite(A1))
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() error A1: "+A1);
+                //if( !Double.isFinite(B1))
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() error B1: "+dxBA+"/"+dyBA);
+                //if( !Double.isFinite(C1))
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() error C1: "+dxBA+"/"+dyBA+"*"+yB+"-"+xB);
+                
+                if( Math.abs(dyDS)<Math.abs(dxDS) ) // wariant 2-3
+                {
+                    A2 = -dyDS/dxDS;
+                    B2 = 1.0;
+                    C2 = dyDS/dxDS*xD-yD;
+                    y = -(C2-A2*C1)/(1-A2*B1);
+                    x = -C1-B1*y;
+                //if( Double.isNaN(x) || Double.isNaN(y) )  
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() Not a Number 2-3 "+" A1: "+A1+" B1: "+B1+" C1: "+C1+" A2: "+A2+" B2: "+B2+" C2: "+C2);
+                }
+                else // wariant 1-3
+                {
+                    A2 = 1.0;
+                    B2 = -dxDS/dyDS;
+                    C2 = dxDS/dyDS*yD-xD;
+                    y = (C1-C2)/(B2-B1);
+                    x = -C2-B2*y;
+                //if( Double.isNaN(x) || Double.isNaN(y) )  
+                //    System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() Not a Number 1-3 "+" A1: "+A1+" B1: "+B1+" C1: "+C1+" A2: "+A2+" B2: "+B2+" C2: "+C2);
+                }
+            }
+            
+                if( Double.isFinite(x) && Double.isFinite(y) ) {
+                    if( !((x > Double.max(xA,xB)) || (x < Double.min(xA,xB)) || (y > Double.max(yA,yB)) || (y < Double.min(yA,yB))) )
+                    {
+                        Point2D newPoint = new Point2D(x, y);
+                        //System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() point "+newPoint);
+                        _promien.addCross(newPoint);
+                    }
+                } //else System.out.println("Simulator.Tools.Figura.Wielokat.checkCross() NaN x: "+x+" y: "+y);        
+            });
+                    
+            prevPoint = _point;
+        }
     }
     
     

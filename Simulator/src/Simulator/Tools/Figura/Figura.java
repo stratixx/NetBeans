@@ -9,6 +9,7 @@ import Simulator.Tools.Axis;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.Point;
 import Simulator.Tools.Projection;
+import Simulator.Tools.Promien;
 import java.util.List;
 import javafx.geometry.Point2D;
 
@@ -55,6 +56,7 @@ abstract public class Figura {
     abstract public Point2D setAxisOnMassCenter();    
     abstract public List<Axis> getAxis();
     abstract public Projection projectOnAxis( Axis axis, Point2D offset );
+    abstract public void checkCross( List<Promien> promien, Point2D figuraOffset);
     
     @Override
     public String toString()

@@ -6,11 +6,14 @@
 package Simulator.Obiekt.Robot.Czujnik;
 
 import Simulator.Obiekt.Obiekt;
+import Simulator.Obiekt.Robot.RobotAbstract;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.Point;
+import Simulator.Tools.Promien;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -18,8 +21,8 @@ import javafx.geometry.Point2D;
  */
 public class LIDAR extends Sensor {
     
-    private String name;
-    final private Obiekt robot;
+    private final String name;
+    final private RobotAbstract robot;
     
     final private List<Point> distances; // Odległości wyznaczone w danym pomiarze
     final private int beamsNumber; // ilość jednocześnie wyznaczanych punktów
@@ -27,23 +30,28 @@ public class LIDAR extends Sensor {
     private Boolean done; // czy pomiar zakończono
     private Boolean readed; // czy pomiar odczytano
     
+    private double orientation;
+    private double range;
+    
     final private long delay; // Czas trwania pomiaru [ms]
     private long prevTime;    
     private long startTime; // Czas rozpoczęcia pomiaru [ms]
         
-    public LIDAR( Obiekt newRobot )
+    public LIDAR( RobotAbstract newRobot )
     {
         name = "LIDAR";
         robot = newRobot;        
-        beamsNumber = 6;
+        beamsNumber = 10; // old 36
         started = false;
         done = false;
         readed = false;
+        orientation = robot.getTheta();
+        range = 5000;
         prevTime = 0;
         startTime = 0;
-        delay = 500;
+        delay = 100;
                
-        distances = new ArrayList<Point>();
+        distances = new ArrayList<>();
     }
     
     @Override
@@ -66,6 +74,7 @@ public class LIDAR extends Sensor {
     }
     
     
+    private List<Promien> promien = new ArrayList<>();
     
     @Override
     public void tick( long currTime )
@@ -82,9 +91,38 @@ public class LIDAR extends Sensor {
             {
                 distances.clear();
                 
-                Point point = new Point(new Point2D(startTime/10, 0), startTime);
+                promien.clear();
                 
-                distances.add( point );                
+                for( int n=0; n<beamsNumber; n++)
+                {             
+                    orientation += 360/beamsNumber;
+                    Promien newPromien = new Promien(robot.getOffset(), orientation, range);
+                    promien.add( newPromien );
+                    
+                    //distances.add( new Point( newPromien.getDirection()) );  
+                }
+                //orientation += 5.0;                   
+          
+                robot.getModel().getObjectsList().forEach((element) -> 
+                {
+                    if( element.getID()!=robot.getID() )
+                        element.getElementList().forEach((figura) -> 
+                        {
+                            figura.checkCross( promien, element.getOffset() );
+                        }); 
+                });    
+               // System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() primien.size() "+promien.size());
+                promien.forEach((element) -> {
+                    if( element.getCrossList().size()>0 )
+                    {
+                        //System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() element.size() "+element.getCrossList().size());
+                        Point2D point = element.getMinCrossPoint();
+                        //if( point.distance(robot.getOffset())<=range )
+                            distances.add( new Point(point, currTime) );
+                    }
+                });
+                
+                
         
                 /*
                 for( int n=0; n<360; n=n+(360/beamsNumber))
@@ -105,17 +143,21 @@ public class LIDAR extends Sensor {
     }
     
     @Override
-    public void drawMeasurement( Drawer drawer )
-    {/*
-        Point2D offset = drawer.getOffset();
-        drawer.setoffset(new Point2D(0, 0));
-        drawer.setFill(Color.GREY);
-        List<Point2D> tmp = new ArrayList<>(distances);
-        tmp.forEach((point) -> {
-            drawer.fillOval(point.getX()-measurementMaxDensity/2, point.getY()-measurementMaxDensity/2, measurementMaxDensity*2/2, measurementMaxDensity*2/2);
-            
-        });
-        drawer.setoffset(offset);*/
+    public void draw( Drawer drawer )
+    {
+        synchronized(distances)
+        {
+            Point2D offset = drawer.getOffset();
+            drawer.setoffset(new Point2D(0, 0));
+            drawer.setFill(Color.BLUE);
+            drawer.setStroke(Color.BLUE);
+            //List<Point2D> tmp = new ArrayList<>(distances);
+            distances.forEach((point) -> {
+                drawer.strokeLine(robot.getOffset().getX(), robot.getOffset().getY(), point.getX(), point.getY());
+                drawer.strokePoint( point.getX(), point.getY());
+            });
+            drawer.setoffset(offset);
+        }
     }
     
     @Override

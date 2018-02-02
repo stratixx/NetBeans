@@ -47,7 +47,7 @@ public class Point extends Point2D {
     
     public String toString()
     {
-        return "CreationTime: "+creationTime+" ; "+super.toString()+"; ";
+        return /*"CreationTime: "+creationTime+" ; "+*/super.toString()+"; ";
     }
     
     //static public Point2D projection( Point2D projected)

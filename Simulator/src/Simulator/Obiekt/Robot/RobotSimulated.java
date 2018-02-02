@@ -64,11 +64,14 @@ public class RobotSimulated extends RobotAbstract{
         
         if( lidar.isDone())
         {
+            //System.out.println("RobotSimulated.robotProcedure() LIDAR done");
+            distances.clear();
             lidar.read().forEach((element) -> {
-                if( !distances.contains(element) )
+                //if( !distances.contains(element) )
+                //System.out.println(element);
                     distances.add(element);
             });
-            System.out.println( "Robot.RobotProcedure() get mesurements: " + distances);
+            //System.out.println( "Robot.RobotProcedure() get mesurements: " + distances);
             lidar.start();
         }
     }

@@ -10,6 +10,7 @@ import Simulator.Tools.Drawer;
 import Simulator.Tools.MyMath;
 import Simulator.Tools.Point;
 import Simulator.Tools.Projection;
+import Simulator.Tools.Promien;
 import java.util.List;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -124,6 +125,17 @@ public class Kolo extends Figura {
         projection.addProjectedPoint( new Point2D(dp*versor.getX(), dp*versor.getY()) );  
         
         return projection;
+    }
+    
+    @Override
+    public void checkCross( List<Promien> promien, Point2D figuraOffset)
+    {
+        Point2D center = this.center.add(figuraOffset);
+        //System.out.println("Simulator.Tools.Figura.Kolo.checkCross() center: "+center);
+        promien.forEach((element) -> {
+            
+        });
+        //promien.get(0).addCross(center);
     }
     
     @Override

@@ -7,6 +7,7 @@ package Simulator.Obiekt.Przeszkoda;
 
 import Simulator.Obiekt.Obiekt;
 import Simulator.Tools.Figura.Figura;
+import Simulator.Tools.Promien;
 import java.util.List;
 import javafx.geometry.Point2D;
 
@@ -30,7 +31,6 @@ abstract public class Przeszkoda extends Obiekt{
     {
         super( newPosition, true, false, newElement, name);        
     }
-    
     //////////////// Settery i Gettery /////////////////
     
 }

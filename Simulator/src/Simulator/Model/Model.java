@@ -10,6 +10,7 @@ import Simulator.Obiekt.Robot.Czujnik.LIDAR;
 import Simulator.Obiekt.Robot.RobotAbstract;
 import Simulator.Obiekt.Robot.RobotSimulated;
 import Simulator.Tools.Drawer;
+import Simulator.Tools.Promien;
 import Simulator.Tools.RefreshThread;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,11 +26,11 @@ public class Model implements ModelInterface {
     List<Obiekt> obiekt;
     
     // robot porusza się po trasie ograniczonej barierą
-    private RobotAbstract robot;    
+    private RobotAbstract robot;   
+    // granice planszy/mapy
+    private Przeszkoda bariera;
     // przeszkody na trasie robota
     private List<Przeszkoda> przeszkoda;
-    // bariera ogranicza pole ruchu robota
-    private List<Przeszkoda> bariera;
     // punkty odniesienia robota, 4 latarnie w skrajnych punktach
     private List<Latarnia> latarnia;
     // cel robota
@@ -72,8 +73,10 @@ public class Model implements ModelInterface {
             }
         };
         
-        robot = new RobotSimulated(100, 80, 10 );
-        robot.setTheta(90);
+        robot = new RobotSimulated(80, 80, 10 );
+        robot.setTheta(135);
+        
+        bariera = new Bariera(screenWidth, screenHeight, 100);
         
         przeszkoda = new ArrayList<>();
         przeszkoda.add( new FourDots(new Point2D(400, 420), 60, 50, 10));
@@ -94,6 +97,7 @@ public class Model implements ModelInterface {
         latarnia.add( new Latarnia(0,screenHeight) );
         
         obiekt.add( robot );
+        obiekt.add(bariera);
         obiekt.addAll( przeszkoda );
         //obiekt.addAll(bariera);
         obiekt.add(cel);
@@ -102,6 +106,7 @@ public class Model implements ModelInterface {
         // dodanie listy obiektów i ustawienie nadzorcy kolizji obiektów
         collision.addObjectList( obiekt );
         obiekt.forEach((element) -> {
+            element.setModel(this);
             element.setVetoableChangeListener(collision);
         });
         
@@ -125,6 +130,7 @@ public class Model implements ModelInterface {
         };
         refreshThread.setName("ModelRefreshThread");
     }
+    
     @Override
     public void drawObjects( Drawer drawer )
     {       
@@ -201,4 +207,8 @@ public class Model implements ModelInterface {
         });
     }
     
+    public List<Obiekt> getObjectsList()
+    {
+        return obiekt;
+    }
 }
