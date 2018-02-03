@@ -41,12 +41,12 @@ public class LIDAR extends Sensor {
     {
         name = "LIDAR";
         robot = newRobot;        
-        beamsNumber = 10; // old 36
+        beamsNumber = 120; // old 36
         started = false;
         done = false;
         readed = false;
         orientation = robot.getTheta();
-        range = 5000;
+        range = 200;
         prevTime = 0;
         startTime = 0;
         delay = 100;
@@ -101,22 +101,27 @@ public class LIDAR extends Sensor {
                     
                     //distances.add( new Point( newPromien.getDirection()) );  
                 }
-                //orientation += 5.0;                   
-          
+                orientation += 5.0;                   
+                //System.out.println("Czujnik.LIDAR.tick() check crosses start");
                 robot.getModel().getObjectsList().forEach((element) -> 
                 {
+                    //System.out.println("Czujnik.LIDAR.tick() figury");
                     if( element.getID()!=robot.getID() )
                         element.getElementList().forEach((figura) -> 
                         {
                             figura.checkCross( promien, element.getOffset() );
+                            //System.out.println("Czujnik.LIDAR.tick() promien: "+promien);
                         }); 
                 });    
                // System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() primien.size() "+promien.size());
+                //System.out.println("Czujnik.LIDAR.tick() promien.forEach "+promien.size());
                 promien.forEach((element) -> {
+                    //System.out.println("Czujnik.LIDAR.tick() element: "+element.getCrossList().size());
                     if( element.getCrossList().size()>0 )
                     {
                         //System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() element.size() "+element.getCrossList().size());
                         Point2D point = element.getMinCrossPoint();
+                        //System.out.println("Czujnik.LIDAR.tick() mincrosspoint: "+point);
                         //if( point.distance(robot.getOffset())<=range )
                             distances.add( new Point(point, currTime) );
                     }

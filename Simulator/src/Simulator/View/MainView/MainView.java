@@ -51,7 +51,7 @@ public class MainView extends ViewController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        System.out.println("Simulator.View.MainView.MainView.initialize()");        
+        //System.out.println("Simulator.View.MainView.MainView.initialize()");        
         
         super.setViewName("Start");
         //super.setGraphicsContext( canvas.getGraphicsContext2D() );        

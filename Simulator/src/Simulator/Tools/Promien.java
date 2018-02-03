@@ -54,6 +54,8 @@ public class Promien {
         Double result = Double.MAX_VALUE;
         Double tmp;
         Point2D resultPoint = null;
+        //System.out.println("Tools.Promien.getMinCrossPoint() start: "+start+" direction: "+direction);
+        //System.out.println("Tools.Promien.getMinCrossPoint() "+crossDistance);
         for (Point2D cross : crossDistance) {
             tmp=cross.distance(start);
             if( tmp < result )
@@ -63,5 +65,11 @@ public class Promien {
             }
         }
         return resultPoint;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "Promien: start: "+start+" direction: "+direction+" cross: "+crossDistance.toString()+"; ";
     }
 }

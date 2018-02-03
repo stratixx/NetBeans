@@ -130,9 +130,64 @@ public class Kolo extends Figura {
     @Override
     public void checkCross( List<Promien> promien, Point2D figuraOffset)
     {
-        Point2D center = this.center.add(figuraOffset);
+        Point2D _center = this.center.add(figuraOffset);
         //System.out.println("Simulator.Tools.Figura.Kolo.checkCross() center: "+center);
-        promien.forEach((element) -> {
+        double xC = _center.getX();
+        double yC = _center.getY();
+            
+        promien.forEach((_promien) -> 
+        {
+            double xD = _promien.getDirection().getX();
+            double yD = _promien.getDirection().getY();
+            double xS = _promien.getStart().getX();
+            double yS = _promien.getStart().getY();
+            double dyDS = yD-yS;
+            double dxDS = xD-xS;
+            double dySC = yS-yC;
+            double dxSC = xS-xC;
+
+            double a, b, c;
+
+            double xA, xB;
+            double yA, yB;
+            double tA, tB;
+            
+            
+            a = dxDS*dxDS + dyDS*dyDS;
+            b = 2*( dxDS*dxSC + dyDS*dySC );
+            c = dxSC*dxSC + dySC*dySC - radius*radius;
+            //System.out.println("Simulator.Tools.Figura.Kolo.checkCross() "+a+" | "+b+" | "+c);
+            if( MyMath.delta(a, b, c)>=0.0  )
+            {
+            //System.out.println("Simulator.Tools.Figura.Kolo.checkCross() "+a+" | "+b+" | "+c);
+                //System.out.println("Simulator.Tools.Figura.Kolo.checkCross() delta>=0 : "+MyMath.delta(a, b, c));
+                tA = MyMath.getRootMinus(a, b, c);
+                xA = xS+dxDS*tA;
+                yA = yS+dyDS*tA;
+                
+                tB = MyMath.getRootPlus(a, b, c);
+                xB = xS+dxDS*tB;
+                yB = yS+dyDS*tB;
+                    
+               // System.out.println("Simulator.Tools.Figura.Kolo.checkCross() tA: "+tA);
+                //System.out.println("Simulator.Tools.Figura.Kolo.checkCross() tB: "+tB);
+                
+                    //System.out.println("Figura.Kolo.checkCross() pre pointA: "+new Point2D(xA,yA));
+                    //System.out.println("Figura.Kolo.checkCross() pre pointB: "+new Point2D(xB,yB));
+                //if( Double.isFinite(tA) )                
+                    if( !((xA > Double.max(xD,xS)) || (xA < Double.min(xD,xS)) || (yA > Double.max(yD,yS)) || (yA < Double.min(yD,yS))) )
+                {
+                    //System.out.println("Figura.Kolo.checkCross() tA point: "+new Point2D(xA,yA));
+                    _promien.addCross(new Point2D(xA, yA)); 
+                }
+                //if( Double.isFinite(tB) )
+                    if( !((xB > Double.max(xD,xS)) || (xB < Double.min(xD,xS)) || (yB > Double.max(yD,yS)) || (yB < Double.min(yD,yS))) )
+                {
+                    //System.out.println("Figura.Kolo.checkCross() tB point: "+new Point2D(xB,yB));
+                    _promien.addCross(new Point2D(xB, yB)); 
+                }
+            }
+            
             
         });
         //promien.get(0).addCross(center);

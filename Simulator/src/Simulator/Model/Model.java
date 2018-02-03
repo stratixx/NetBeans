@@ -112,7 +112,7 @@ public class Model implements ModelInterface {
         
         obiekt.forEach((element) -> {
             element.move(0); // odświeżenie elementów
-            System.out.println( element.toString() );
+            //System.out.println( element.toString() );
         });
         
         refreshThread = new RefreshThread(100) 

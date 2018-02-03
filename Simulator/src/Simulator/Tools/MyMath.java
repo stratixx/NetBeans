@@ -57,4 +57,19 @@ public class MyMath {
         return result;
     }
     
+    public static double delta( double a, double b, double c)
+    {
+        return b*b-4*a*c;
+    }
+    
+    public static double getRootMinus( double a, double b, double c)
+    {
+        return (-b - Math.sqrt( delta(a, b, c) )) / (2*a);
+    }
+    
+    public static double getRootPlus( double a, double b, double c)
+    {
+        return (-b + Math.sqrt( delta(a, b, c) )) / (2*a);
+    }
+    
 }
