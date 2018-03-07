@@ -44,7 +44,7 @@ public class Drawer{
     public void strokePoint( double x0, double y0 )
     {
         final double radius = 2;
-        gc.strokeOval(x0+offset.getX()-radius/2, y0+offset.getY()-radius/2, radius*2, radius*2);
+        gc.strokeOval(x0+offset.getX()-radius, y0+offset.getY()-radius, radius*2, radius*2);
     }
     
     public void fillPoint( double x0, double y0 )

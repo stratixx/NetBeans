@@ -86,7 +86,7 @@ abstract public class RefreshThread extends Thread {
         //System.out.println("Simulator.View.RefreshThread.run() runned");
         try
         {    
-            threadInitProcedure(startTime);
+            threadInitProcedure( 0 );
             //System.out.println("Simulator.View.RefreshThread.run() try start");
             while( controls.isRun() )
             {

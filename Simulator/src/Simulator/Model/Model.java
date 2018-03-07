@@ -74,16 +74,16 @@ public class Model implements ModelInterface {
         };
         
         robot = new RobotSimulated(80, 80, 10 );
-        robot.setTheta(135);
+        //robot.setTheta(135);
         
         bariera = new Bariera(screenWidth, screenHeight, 100);
         
         przeszkoda = new ArrayList<>();
         przeszkoda.add( new FourDots(new Point2D(400, 420), 60, 50, 10));
         //przeszkoda.add( new FourDots(new Point2D(180, 200), 60, 50, 10));
-        przeszkoda.add( new Skala(new Point2D(620,275)));
+        przeszkoda.add( new PieciokatForemny(new Point2D(520,275)));
         przeszkoda.add( new FourDots(new Point2D(250, 450), 60, 50, 10));
-        przeszkoda.add( new PieciokatForemny(new Point2D(130,315)));
+        przeszkoda.add( new Skala(new Point2D(130,315)));
         //przeszkoda.add( new Prostokat(50, 300, 50, 50) );
         
         //bariera = new ArrayList<>();

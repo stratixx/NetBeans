@@ -8,6 +8,7 @@ package Simulator.Obiekt.Robot.Czujnik;
 import Simulator.Tools.Drawer;
 import Simulator.Tools.Point;
 import java.util.List;
+import javafx.geometry.Point2D;
 
 /**
  *
@@ -17,7 +18,7 @@ abstract public class Sensor {
     
     
     abstract public void start();
-    abstract public List<Point> read();
+    abstract public List<Point2D> read();
     abstract public Boolean isStarted();
     abstract public Boolean isDone();
     abstract public Boolean isReaded();

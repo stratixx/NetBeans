@@ -24,7 +24,7 @@ public class LIDAR extends Sensor {
     private final String name;
     final private RobotAbstract robot;
     
-    final private List<Point> distances; // Odległości wyznaczone w danym pomiarze
+    final private List<Point2D> distances; // Odległości wyznaczone w danym pomiarze
     final private int beamsNumber; // ilość jednocześnie wyznaczanych punktów
     private Boolean started;
     private Boolean done; // czy pomiar zakończono
@@ -41,15 +41,15 @@ public class LIDAR extends Sensor {
     {
         name = "LIDAR";
         robot = newRobot;        
-        beamsNumber = 120; // old 36
+        beamsNumber = 60; // old 36
         started = false;
         done = false;
         readed = false;
-        orientation = robot.getTheta();
-        range = 200;
+        orientation = 0.0; // przesunięcie kąta pomiaru w celu dokładnego pokrycia
+        range = 1000;
         prevTime = 0;
         startTime = 0;
-        delay = 100;
+        delay = 10;
                
         distances = new ArrayList<>();
     }
@@ -64,7 +64,7 @@ public class LIDAR extends Sensor {
     }
     
     @Override
-    public List<Point> read()
+    public List<Point2D> read()
     {
         synchronized( distances )
         {
@@ -95,13 +95,14 @@ public class LIDAR extends Sensor {
                 
                 for( int n=0; n<beamsNumber; n++)
                 {             
-                    orientation += 360/beamsNumber;
-                    Promien newPromien = new Promien(robot.getOffset(), orientation, range);
+                    //orientation += 360/beamsNumber;
+                    Promien newPromien = new Promien(robot.getOffset(), orientation+360*n/beamsNumber+robot.getTheta(), range);
                     promien.add( newPromien );
                     
                     //distances.add( new Point( newPromien.getDirection()) );  
                 }
-                orientation += 5.0;                   
+                orientation += 360.0/beamsNumber/10.0;   
+                if( orientation>=360.0) orientation -= 360.0;                
                 //System.out.println("Czujnik.LIDAR.tick() check crosses start");
                 robot.getModel().getObjectsList().forEach((element) -> 
                 {
@@ -113,17 +114,12 @@ public class LIDAR extends Sensor {
                             //System.out.println("Czujnik.LIDAR.tick() promien: "+promien);
                         }); 
                 });    
-               // System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() primien.size() "+promien.size());
-                //System.out.println("Czujnik.LIDAR.tick() promien.forEach "+promien.size());
                 promien.forEach((element) -> {
-                    //System.out.println("Czujnik.LIDAR.tick() element: "+element.getCrossList().size());
                     if( element.getCrossList().size()>0 )
                     {
-                        //System.out.println("Simulator.Obiekt.Robot.Czujnik.LIDAR.tick() element.size() "+element.getCrossList().size());
                         Point2D point = element.getMinCrossPoint();
-                        //System.out.println("Czujnik.LIDAR.tick() mincrosspoint: "+point);
-                        //if( point.distance(robot.getOffset())<=range )
-                            distances.add( new Point(point, currTime) );
+                        if( point.distance(robot.getOffset())<=range )
+                            distances.add( point.subtract(element.getStart()) );
                     }
                 });
                 
@@ -150,8 +146,13 @@ public class LIDAR extends Sensor {
     @Override
     public void draw( Drawer drawer )
     {
+        /*
         synchronized(distances)
         {
+            //drawer.setFill(Color.RED);
+            //drawer.setStroke(Color.RED);
+            //drawer.strokeOval(-range, -range, range*2, range*2);
+            
             Point2D offset = drawer.getOffset();
             drawer.setoffset(new Point2D(0, 0));
             drawer.setFill(Color.BLUE);
@@ -162,7 +163,7 @@ public class LIDAR extends Sensor {
                 drawer.strokePoint( point.getX(), point.getY());
             });
             drawer.setoffset(offset);
-        }
+        }*/
     }
     
     @Override
