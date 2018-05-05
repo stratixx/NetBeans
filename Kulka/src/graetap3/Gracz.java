@@ -32,17 +32,39 @@ public class Gracz {
         height = 10;
     
     }
- 
+    
+    public void move( double axisX, double axisY)
+    {
+        velocity_x += axisX;
+        velocity_y += axisY;
+    }
+    
     public void update(){
     	x += velocity_x;
         y += velocity_y;
         velocity_x += acceleration_x;
         velocity_y += acceleration_y;
         
-        if( x>(map.getUnscaledWidth()-width) )   x = map.getUnscaledWidth()-width;
-        if( y>(map.getUnscaledHeight()-height) )  y = map.getUnscaledHeight()-height;
-        if( x<width )     x = 0.0;
-        if( y<height )     y = 0.0;
+        if( x>(map.getUnscaledWidth()-width) )   
+        {
+            x = map.getUnscaledWidth()-width;
+            velocity_x = 0;
+        }
+        if( y>(map.getUnscaledHeight()-height) )  
+        {
+            y = map.getUnscaledHeight()-height;
+            velocity_y = 0;
+        }
+        if( x<0 )     
+        {
+            x = 0;
+            velocity_x = 0;
+        }
+        if( y<0 )     
+        {
+            y = 0;
+            velocity_y = 0;
+        }
     }
   /**metoda kolorujaca gracza (kulke)
    * 
