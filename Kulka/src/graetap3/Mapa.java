@@ -14,7 +14,7 @@ import javax.swing.JPanel;
  
 public class Mapa{
  
-    /**klasa , która wczytuje mapê z pliku 
+    /**klasa , ktï¿½ra wczytuje mapï¿½ z pliku 
      * 
      * 
      * */
@@ -40,7 +40,9 @@ public class Mapa{
              mapHeight = Integer.parseInt(br.readLine());
  
              map = new int[mapHeight][mapWidth];
- 
+             
+             
+             
              String delimiters = " ";
              for(int row = 0; row <mapHeight; row++){
                  String line = br.readLine();
@@ -61,7 +63,7 @@ public class Mapa{
     }
  
     /** metoda kolorujaca mape 
-     * w zale¿noœci jak¹ cyfrê zawiera mapa
+     * w zaleï¿½noï¿½ci jakï¿½ cyfrï¿½ zawiera mapa
      * 0-czarny
      * 1-niebieski
      * 2-zielony
@@ -83,6 +85,26 @@ public class Mapa{
                 g.fillRect(col*tileSize, row*tileSize, tileSize, tileSize);
             }
         }
+    }
+    
+    public double getUnscaledWidth()
+    {
+        return mapWidth;
+    }
+    
+    public double getUnscaledHeight()
+    {
+        return mapHeight;
+    }
+    
+    public void setTileSize(int newTileSize)
+    {
+        tileSize = newTileSize;
+    }
+    
+    public int getTileSize()
+    {
+        return tileSize;
     }
 }
  

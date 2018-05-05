@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
- /**klasa zawieraj¹ca menu gry*/
+ /**klasa zawierajï¿½ca menu gry*/
 public class Panel extends JPanel implements ActionListener {
 	
 	private JButton bGraj,bInstrukcja,bWyniki,bWyjdz;
@@ -31,6 +31,8 @@ public class Panel extends JPanel implements ActionListener {
 	private JTextField tUkonczonaGraWprowadzImie;
 	private Object sImie;
 	//
+        
+        private int scale = 2;
 	
 	Panel(){
 		setSize(400,300);
@@ -129,7 +131,7 @@ public class Panel extends JPanel implements ActionListener {
 		
 	}
 	
-	/**opisanie zachowania programu po wciœniêciu poszczególnych guzików*/
+	/**opisanie zachowania programu po wciï¿½niï¿½ciu poszczegï¿½lnych guzikï¿½w*/
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		Object zrodlo = arg0.getSource();
@@ -139,12 +141,16 @@ public class Panel extends JPanel implements ActionListener {
 			setLayout(null);
 			oknoGry = new Rysowanie();
 			add(oknoGry);
-			oknoGry.setVisible(true);
 			bGraj.setVisible(false);
 			bInstrukcja.setVisible(false);
 			bWyniki.setVisible(false);
 			bWyjdz.setVisible(false);
-			lGra.setVisible(true);
+                        
+                        //setSize( getSize().width*scale, getSize().height*scale );
+                        oknoGry.setScale(scale); // przeskalowanie okna gry
+			oknoGry.start(); // Poczatek gry
+                        
+			//lGra.setVisible(true);
 			
 		    //this.setVisible(false);
 			//oknoGry = new Rysowanie();
