@@ -6,3 +6,7 @@ Simulator/build/
 Simulator/dist/
 
 Simulator/nbproject/
+
+*.classpath
+*.project
+*.settings/.
