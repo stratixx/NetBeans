@@ -10,3 +10,8 @@ Simulator/nbproject/
 *.classpath
 *.project
 *.settings/.
+/Kulka/nbproject/private/
+/Kulka/build/
+build.xml
+manifest.mf
+*/nbproject/
